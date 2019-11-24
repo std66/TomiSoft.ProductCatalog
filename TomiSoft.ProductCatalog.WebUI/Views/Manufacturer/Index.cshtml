@@ -1,0 +1,63 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@using TomiSoft.ProductCatalog.BusinessModels
+
+<script type="text/javascript">
+    function addWebsite(id) {
+        var url = prompt("Weblap címe:");
+        if (url != null)
+            window.location.href = `Manufacturer/AddWebsiteUrl?id=${id}&url=${encodeURI(url)}`;
+    }
+</script>
+
+<div class="text-center">
+    <h1 class="display-4">Gyártók</h1>
+    <form method="post" action="Manufacturer/AddManufacturer" enctype="application/x-www-form-urlencoded">
+        <table>
+            <thead>
+                <tr>
+                    <th>Gyártó neve</th>
+                    <th>Ország</th>
+                    <th>Irányítószám</th>
+                    <th>Cím</th>
+                    <th>Webcím</th>
+                    <th>Műveletek</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="text" name="name" /></td>
+                    <td><input type="text" name="countrycode" /></td>
+                    <td><input type="number" name="zipcode" /></td>
+                    <td><input type="text" name="address" /></td>
+                    <td><input type="url" name="website_url" /></td>
+                    <td><input type="submit" value="Mentés" /></td>
+                </tr>
+
+                @{
+                    foreach (ManufacturerBM m in ViewBag.Manufacturers) {
+                        <tr>
+                            <td>@m.Name</td>
+                            <td>@m.Location.CountryCode</td>
+                            <td>@m.Location.ZipCode</td>
+                            <td>@m.Location.Address</td>
+                            <td>
+                                @if (m.WebsiteUri == null) {
+                                    @:<a href="javascript:addWebsite(@m.ManufacturerId)">Webcím megadása</a>
+                                }
+                                else {
+                                    @:<a href="@m.WebsiteUri">@m.WebsiteUri</a>
+                                }
+                            </td>
+                            <td>
+                                <a href="Manufacturer/Delete?id=@m.ManufacturerId">Törlés</a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </form>
+</div>

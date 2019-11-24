@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29326.143
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TomiSoft.ProductCatalog.WebUI", "TomiSoft.ProductCatalog.WebUI\TomiSoft.ProductCatalog.WebUI.csproj", "{2988A17A-74C7-4F20-B59D-8838D82523D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TomiSoft.ProductCatalog", "TomiSoft.ProductCatalog\TomiSoft.ProductCatalog.csproj", "{D537585E-081C-43C4-BCC6-87BB4589EFBB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TomiSoft.ProductCatalog.Data.Sqlite", "TomiSoft.ProductCatalog.Data.Sqlite\TomiSoft.ProductCatalog.Data.Sqlite.csproj", "{88168FCB-C894-422A-BF4D-B01FBDCBF8EA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2988A17A-74C7-4F20-B59D-8838D82523D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2988A17A-74C7-4F20-B59D-8838D82523D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2988A17A-74C7-4F20-B59D-8838D82523D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2988A17A-74C7-4F20-B59D-8838D82523D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D537585E-081C-43C4-BCC6-87BB4589EFBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D537585E-081C-43C4-BCC6-87BB4589EFBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D537585E-081C-43C4-BCC6-87BB4589EFBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D537585E-081C-43C4-BCC6-87BB4589EFBB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88168FCB-C894-422A-BF4D-B01FBDCBF8EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88168FCB-C894-422A-BF4D-B01FBDCBF8EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88168FCB-C894-422A-BF4D-B01FBDCBF8EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88168FCB-C894-422A-BF4D-B01FBDCBF8EA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {40A44B4B-8C41-4DD9-B687-F0B9992AE5B2}
+	EndGlobalSection
+EndGlobal
