@@ -20,7 +20,16 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite.Mapping {
                         src.Address
                     )
                 ))
-                .ForCtorParam("websiteUri", opt => opt.MapFrom(src => src.WebsiteUri));
+                .ForCtorParam("websiteUri", opt => opt.MapFrom(src => src.WebsiteUri))
+                .ForCtorParam("logo", opt => opt.MapFrom((src, context) => {
+                    if (src.LogoData != null && src.LogoMimeType != null)
+                        return new ManufacturerLogoBM(
+                            src.LogoData,
+                            src.LogoMimeType
+                        );
+                    else
+                        return null;
+                }));
         }
 
         private void AddBusinessModelToEntityMapper() {
@@ -30,7 +39,9 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite.Mapping {
                 .ForMember(x => x.CountryCode, opt => opt.MapFrom(src => src.Location.CountryCode))
                 .ForMember(x => x.Address, opt => opt.MapFrom(src => src.Location.Address))
                 .ForMember(x => x.ZipCode, opt => opt.MapFrom(src => src.Location.ZipCode))
-                .ForMember(x => x.WebsiteUri, opt => opt.MapFrom(src => src.WebsiteUri));
+                .ForMember(x => x.WebsiteUri, opt => opt.MapFrom(src => src.WebsiteUri))
+                .ForMember(x => x.LogoData, opt => opt.MapFrom(src => src.Logo.Data))
+                .ForMember(x => x.LogoMimeType, opt => opt.MapFrom(src => src.Logo.MimeType));
         }
     }
 }

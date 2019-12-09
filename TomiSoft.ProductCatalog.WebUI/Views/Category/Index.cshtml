@@ -1,0 +1,24 @@
+﻿@using TomiSoft.ProductCatalog.BusinessModels;
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Termékkategóriák</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>Név</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (LocalizedCategoryBM category in ViewBag.Categories) {
+            <tr>
+                <td>@category.LocalizedName</td>
+            </tr>
+        }
+    </tbody>
+</table>
+

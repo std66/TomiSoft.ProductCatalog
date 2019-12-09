@@ -10,11 +10,21 @@
         if (url != null)
             window.location.href = `Manufacturer/AddWebsiteUrl?id=${id}&url=${encodeURI(url)}`;
     }
+
+    function uploadCompanyLogo(id) {
+        document.frmUploadCompanyLogo.id.value = id;
+        document.frmUploadCompanyLogo.logo.click();
+    }
 </script>
+
+<form method="post" name="frmUploadCompanyLogo" action="Manufacturer/AddCompanyLogo" enctype="multipart/form-data" style="display: none;">
+    <input type="file" name="logo" onchange="document.frmUploadCompanyLogo.submit();"/>
+    <input type="hidden" name="id" />
+</form>
 
 <div class="text-center">
     <h1 class="display-4">Gyártók</h1>
-    <form method="post" action="Manufacturer/AddManufacturer" enctype="application/x-www-form-urlencoded">
+    <form method="post" action="Manufacturer/AddManufacturer" enctype="multipart/form-data">
         <table>
             <thead>
                 <tr>
@@ -23,6 +33,7 @@
                     <th>Irányítószám</th>
                     <th>Cím</th>
                     <th>Webcím</th>
+                    <th>Logó</th>
                     <th>Műveletek</th>
                 </tr>
             </thead>
@@ -33,6 +44,7 @@
                     <td><input type="number" name="zipcode" /></td>
                     <td><input type="text" name="address" /></td>
                     <td><input type="url" name="website_url" /></td>
+                    <td><input type="file" name="logo" /></td>
                     <td><input type="submit" value="Mentés" /></td>
                 </tr>
 
@@ -49,6 +61,14 @@
                                 }
                                 else {
                                     @:<a href="@m.WebsiteUri">@m.WebsiteUri</a>
+                                }
+                            </td>
+                            <td>
+                                @if (m.Logo == null) {
+                                    @:<a href="#" onclick="uploadCompanyLogo(@m.ManufacturerId)">Logó feltöltése</a>
+                                }
+                                else {
+                                    @:<a href="Manufacturer/GetCompanyLogo?id=@m.ManufacturerId">Megtekintés</a>
                                 }
                             </td>
                             <td>

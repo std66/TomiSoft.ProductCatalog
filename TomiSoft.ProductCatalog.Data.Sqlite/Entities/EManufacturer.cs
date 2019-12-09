@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace TomiSoft.ProductCatalog.Data.Sqlite.Entities {
     [Table("manufacturer")]
     internal class EManufacturer : IEqualityComparer<EManufacturer> {
-        [Column("id"), Required]
+        [Column("id"), Required, Key]
         public int Id { get; set; }
 
         [Column("name"), Required]
@@ -22,6 +22,12 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite.Entities {
 
         [Column("website_url")]
         public string WebsiteUri { get; set; }
+
+        [Column("company_logo")]
+        public byte[] LogoData { get; set; }
+
+        [Column("company_logo_mimetype")]
+        public string LogoMimeType { get; set; }
 
         public bool Equals(EManufacturer x, EManufacturer y) {
             if (x == null && y == null)

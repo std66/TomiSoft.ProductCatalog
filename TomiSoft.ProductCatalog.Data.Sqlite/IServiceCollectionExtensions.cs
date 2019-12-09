@@ -16,6 +16,7 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite {
                             .UseSqlite(connectionString)
                             .UseInternalServiceProvider(serviceProvider)
                 )
+                .AddScoped<ICategoryDataManager, SqliteCategoryDataManager>()
                 .AddScoped<IManufacturerDataManager, SqliteManufacturerDataManager>();
         }
     }

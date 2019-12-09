@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 using TomiSoft.ProductCatalog.BusinessModels;
 using TomiSoft.ProductCatalog.DataManagement;
@@ -23,24 +25,52 @@ namespace TomiSoft.ProductCatalog.WebUI.Controllers {
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddManufacturer([FromForm] string name, [FromForm] string countrycode, [FromForm] int zipcode, [FromForm] string address, [FromForm] Uri website_url) {
+        public async Task<IActionResult> AddManufacturer([FromForm] string name, [FromForm] string countrycode, [FromForm] int zipcode, [FromForm] string address, [FromForm] Uri website_url, IFormFile logo) {
+            byte[] logoData = new byte[logo.Length];
+            using (Stream s = logo.OpenReadStream()) {
+                await s.ReadAsync(logoData, 0, logoData.Length);
+            }
+
             await dataManager.InsertAsync(
-                new BusinessModels.ManufacturerBM(
+                new ManufacturerBM(
                     default(int),
                     name,
-                    new BusinessModels.ManufacturerLocationBM(countrycode, zipcode, address),
-                    website_url
+                    new ManufacturerLocationBM(countrycode, zipcode, address),
+                    website_url,
+                    new ManufacturerLogoBM(logoData, logo.ContentType)
                 )
             );
 
             return RedirectToAction(nameof(Index));
         }
 
+        public async Task<IActionResult> GetCompanyLogo([FromQuery] int id) {
+            ManufacturerLogoBM logo = await dataManager.GetLogoAsync(id);
+
+            return this.File(logo.Data, logo.MimeType);
+        }
+
         public async Task<IActionResult> AddWebsiteUrl(int id, string url) {
             ManufacturerBM model = await dataManager.GetAsync(id);
 
             await dataManager.UpdateAsync(
-                new ManufacturerBM(model.ManufacturerId, model.Name, model.Location, new Uri(url))
+                new ManufacturerBM(model.ManufacturerId, model.Name, model.Location, new Uri(url), model.Logo)
+            );
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddCompanyLogo([FromForm]int id, IFormFile logo) {
+            ManufacturerBM model = await dataManager.GetAsync(id);
+
+            byte[] logoData = new byte[logo.Length];
+            using (Stream s = logo.OpenReadStream()) {
+                await s.ReadAsync(logoData, 0, logoData.Length);
+            }
+
+            await dataManager.UpdateAsync(
+                new ManufacturerBM(model.ManufacturerId, model.Name, model.Location, model.WebsiteUri, new ManufacturerLogoBM(logoData, logo.ContentType))
             );
 
             return RedirectToAction(nameof(Index));

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TomiSoft.ProductCatalog.BusinessModels;
 using TomiSoft.ProductCatalog.Data.Sqlite.Entities;
@@ -39,6 +40,16 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite {
             return mapper.Map<EManufacturer, ManufacturerBM>(
                 await dbContext.Manufacturers.SingleAsync(x => x.Id == id)
             );
+        }
+
+        public async Task<ManufacturerLogoBM> GetLogoAsync(int id) {
+            var data = await dbContext.Manufacturers.Select(x => new {
+                Id = x.Id,
+                Data = x.LogoData,
+                MimeType = x.LogoMimeType
+            }).SingleAsync(x => x.Id == id);
+
+            return new ManufacturerLogoBM(data.Data, data.MimeType);
         }
 
         public async Task<ManufacturerBM> InsertAsync(ManufacturerBM manufacturer) {
