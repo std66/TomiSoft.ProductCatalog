@@ -12,15 +12,14 @@ namespace TomiSoft.ProductCatalog.Services {
             this.categoryDataManager = categoryDataManager;
         }
 
-        public async Task<LocalizedProductBM> GetProduct(string barcode, string languageCode) {
-
-            return new LocalizedProductBM(
+        public Task<LocalizedProductBM> GetProduct(string barcode, string languageCode) {
+            return Task.FromResult(new LocalizedProductBM(
                 barcode: barcode,
                 languageCode: languageCode,
                 localizedName: null,
                 category: null,
                 manufacturer: null
-            );
+            ));
         }
     }
 }

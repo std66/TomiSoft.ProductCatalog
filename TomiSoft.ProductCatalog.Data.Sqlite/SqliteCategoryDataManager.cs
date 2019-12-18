@@ -22,7 +22,8 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite {
                 result.Add(new LocalizedCategoryBM(
                     categoryId: category.Id,
                     languageCode: localizedName.LanguageCode,
-                    localizedName: localizedName.LocalizedName
+                    localizedName: localizedName.LocalizedName,
+                    parentCategoryId: category.ParentId
                 ));
             }
 
@@ -36,7 +37,8 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite {
             return new LocalizedCategoryBM(
                 categoryId: category.Id,
                 languageCode: name.LanguageCode,
-                localizedName: name.LocalizedName
+                localizedName: name.LocalizedName,
+                parentCategoryId: category.ParentId
             );
         }
     }
