@@ -3,23 +3,24 @@ using TomiSoft.ProductCatalog.BusinessModels;
 using TomiSoft.ProductCatalog.DataManagement;
 
 namespace TomiSoft.ProductCatalog.Services {
-    internal class ProductService {
-        private readonly IManufacturerDataManager manufacturerDataManager;
+    internal class ProductService : IProductService {
+        private readonly IProductDataManager productDataManager;
         private readonly ICategoryDataManager categoryDataManager;
 
-        public ProductService(IManufacturerDataManager manufacturerDataManager, ICategoryDataManager categoryDataManager) {
-            this.manufacturerDataManager = manufacturerDataManager;
+        public ProductService(IProductDataManager productDataManager, ICategoryDataManager categoryDataManager) {
+            this.productDataManager = productDataManager;
             this.categoryDataManager = categoryDataManager;
         }
 
-        public Task<LocalizedProductBM> GetProduct(string barcode, string languageCode) {
-            return Task.FromResult(new LocalizedProductBM(
-                barcode: barcode,
-                languageCode: languageCode,
-                localizedName: null,
-                category: null,
-                manufacturer: null
-            ));
+        public Task<LocalizedProductBM> GetProductAsync(string barcode, string languageCode) {
+            return productDataManager.GetLocalizedProductAsync(barcode, languageCode);
+        }
+
+        public async Task<GetProductsByCategoryResultBM> GetProductsByCategoryAsync(int categoryId, string languageCode) {
+            return new GetProductsByCategoryResultBM(
+                products: await productDataManager.GetLocalizedProductByCategoryAsync(categoryId, languageCode),
+                category: await categoryDataManager.GetAsync(categoryId, languageCode)
+            );
         }
     }
 }

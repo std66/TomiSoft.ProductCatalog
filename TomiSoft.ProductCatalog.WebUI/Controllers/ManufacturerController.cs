@@ -13,10 +13,12 @@ namespace TomiSoft.ProductCatalog.WebUI.Controllers {
     public class ManufacturerController : Controller {
         private readonly ILogger<ManufacturerController> _logger;
         private readonly IManufacturerDataManager dataManager;
+        private readonly IProductDataManager productDataManager;
 
-        public ManufacturerController(ILogger<ManufacturerController> logger, IManufacturerDataManager dataManager) {
+        public ManufacturerController(ILogger<ManufacturerController> logger, IManufacturerDataManager dataManager, IProductDataManager productDataManager) {
             _logger = logger;
             this.dataManager = dataManager;
+            this.productDataManager = productDataManager;
         }
 
         public async Task<IActionResult> Index() {
@@ -25,7 +27,7 @@ namespace TomiSoft.ProductCatalog.WebUI.Controllers {
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddManufacturer([FromForm] string name, [FromForm] string countrycode, [FromForm] int zipcode, [FromForm] string address, [FromForm] Uri website_url, IFormFile logo) {
+        public async Task<IActionResult> AddManufacturer([FromForm] string name, [FromForm] string countrycode, [FromForm] string address, [FromForm] Uri website_url, IFormFile logo) {
             byte[] logoData = new byte[logo.Length];
             using (Stream s = logo.OpenReadStream()) {
                 await s.ReadAsync(logoData, 0, logoData.Length);
@@ -35,7 +37,7 @@ namespace TomiSoft.ProductCatalog.WebUI.Controllers {
                 new ManufacturerBM(
                     default(int),
                     name,
-                    new ManufacturerLocationBM(countrycode, zipcode, address),
+                    new ManufacturerLocationBM(countrycode, address),
                     website_url,
                     new ManufacturerLogoBM(logoData, logo.ContentType)
                 )

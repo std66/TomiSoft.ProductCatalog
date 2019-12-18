@@ -17,6 +17,7 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite {
                             .UseInternalServiceProvider(serviceProvider)
                 )
                 .AddScoped<ICategoryDataManager, SqliteCategoryDataManager>()
+                .AddScoped<IProductDataManager, SqliteProductDataManager>()
                 .AddScoped<IManufacturerDataManager, SqliteManufacturerDataManager>();
         }
     }

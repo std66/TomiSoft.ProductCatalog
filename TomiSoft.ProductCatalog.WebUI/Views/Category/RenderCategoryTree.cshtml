@@ -1,0 +1,14 @@
+﻿@using TomiSoft.ProductCatalog.BusinessModels
+
+@model IReadOnlyList<CategoryTreeNodeBM>
+
+[
+    @foreach (CategoryTreeNodeBM category in Model) {
+        @:{
+            @:text: "@category.Category.LocalizedName",
+            @:href: "/Product/GetProductsInCategory?categoryId=@category.Category.CategoryId&languageCode=hu-HU",
+            @:tags: ['@category.ProductsInCategory'],
+            @:nodes: @{await Html.RenderPartialAsync("RenderCategoryTree", category.Nodes);}
+        @:},
+    }
+]

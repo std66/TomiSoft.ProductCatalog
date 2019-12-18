@@ -7,6 +7,7 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite {
         public DbSet<ECategory> Categories { get; set; }
         public DbSet<ECategoryName> CategoryNames { get; set; }
         public DbSet<EProduct> Products { get; set; }
+        public DbSet<EProductName> ProductNames { get; set; }
 
         public SqliteProductCatalogDbContext(DbContextOptions<SqliteProductCatalogDbContext> options)
             : base(options) {

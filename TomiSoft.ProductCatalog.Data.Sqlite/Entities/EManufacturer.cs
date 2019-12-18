@@ -14,9 +14,6 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite.Entities {
         [Column("location_countrycode"), Required]
         public string CountryCode { get; set; }
 
-        [Column("location_zipcode"), Required]
-        public int ZipCode { get; set; }
-
         [Column("location_address"), Required]
         public string Address { get; set; }
 
@@ -45,7 +42,6 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite.Entities {
                     * Id
                     * Name.GetHashCode()
                     * CountryCode.GetHashCode()
-                    * ZipCode
                     * Address.GetHashCode();
             }
         }

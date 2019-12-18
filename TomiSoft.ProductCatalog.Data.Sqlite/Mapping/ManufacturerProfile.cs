@@ -16,7 +16,6 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite.Mapping {
                 .ForCtorParam("location", opt => opt.MapFrom((src, context) =>
                     new ManufacturerLocationBM(
                         src.CountryCode,
-                        src.ZipCode,
                         src.Address
                     )
                 ))
@@ -38,7 +37,6 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite.Mapping {
                 .ForMember(x => x.Name, opt => opt.MapFrom(src => src.Name))
                 .ForMember(x => x.CountryCode, opt => opt.MapFrom(src => src.Location.CountryCode))
                 .ForMember(x => x.Address, opt => opt.MapFrom(src => src.Location.Address))
-                .ForMember(x => x.ZipCode, opt => opt.MapFrom(src => src.Location.ZipCode))
                 .ForMember(x => x.WebsiteUri, opt => opt.MapFrom(src => src.WebsiteUri))
                 .ForMember(x => x.LogoData, opt => opt.MapFrom(src => src.Logo.Data))
                 .ForMember(x => x.LogoMimeType, opt => opt.MapFrom(src => src.Logo.MimeType));

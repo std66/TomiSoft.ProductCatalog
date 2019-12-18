@@ -15,7 +15,7 @@ namespace TomiSoft.ProductCatalog.WebUI.Controllers {
         }
 
         public async Task<IActionResult> Index([FromQuery, Required] string languageCode) {
-            ViewBag.Categories = await categoryDataManager.GetAllAsync(languageCode);
+            ViewBag.Categories = await categoryService.GetCategoryTreeAsync(languageCode);
             return View("Index");
         }
     }

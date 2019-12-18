@@ -3,6 +3,7 @@
 }
 
 @using TomiSoft.ProductCatalog.BusinessModels
+@using TomiSoft.ProductCatalog.WebUI.Extensions
 
 <script type="text/javascript">
     function addWebsite(id) {
@@ -17,20 +18,20 @@
     }
 </script>
 
-<form method="post" name="frmUploadCompanyLogo" action="Manufacturer/AddCompanyLogo" enctype="multipart/form-data" style="display: none;">
+<form method="post" name="frmUploadCompanyLogo" action="/Manufacturer/AddCompanyLogo" enctype="multipart/form-data" style="display: none;">
     <input type="file" name="logo" onchange="document.frmUploadCompanyLogo.submit();"/>
     <input type="hidden" name="id" />
 </form>
 
-<div class="text-center">
-    <h1 class="display-4">Gyártók</h1>
-    <form method="post" action="Manufacturer/AddManufacturer" enctype="multipart/form-data">
-        <table>
+<h1 class="display-4">Gyártók</h1>
+
+<form method="post" action="Manufacturer/AddManufacturer" enctype="multipart/form-data">
+    <p>
+        <table class="table">
             <thead>
                 <tr>
                     <th>Gyártó neve</th>
                     <th>Ország</th>
-                    <th>Irányítószám</th>
                     <th>Cím</th>
                     <th>Webcím</th>
                     <th>Logó</th>
@@ -41,19 +42,17 @@
                 <tr>
                     <td><input type="text" name="name" /></td>
                     <td><input type="text" name="countrycode" /></td>
-                    <td><input type="number" name="zipcode" /></td>
                     <td><input type="text" name="address" /></td>
                     <td><input type="url" name="website_url" /></td>
                     <td><input type="file" name="logo" /></td>
-                    <td><input type="submit" value="Mentés" /></td>
+                    <td><input type="submit" value="Mentés" class="btn btn-sm btn-primary" /></td>
                 </tr>
 
                 @{
                     foreach (ManufacturerBM m in ViewBag.Manufacturers) {
                         <tr>
                             <td>@m.Name</td>
-                            <td>@m.Location.CountryCode</td>
-                            <td>@m.Location.ZipCode</td>
+                            <td>@m.Location.GetCountryDisplayName()</td>
                             <td>@m.Location.Address</td>
                             <td>
                                 @if (m.WebsiteUri == null) {
@@ -65,19 +64,19 @@
                             </td>
                             <td>
                                 @if (m.Logo == null) {
-                                    @:<a href="#" onclick="uploadCompanyLogo(@m.ManufacturerId)">Logó feltöltése</a>
+                                    @:<a href="#" onclick="uploadCompanyLogo(@m.ManufacturerId)" class="btn btn-sm btn-light">Logó feltöltése</a>
                                 }
                                 else {
                                     @:<a href="Manufacturer/GetCompanyLogo?id=@m.ManufacturerId">Megtekintés</a>
                                 }
                             </td>
                             <td>
-                                <a href="Manufacturer/Delete?id=@m.ManufacturerId">Törlés</a>
+                                <a href="Manufacturer/Delete?id=@m.ManufacturerId" class="btn btn-sm btn-danger">Törlés</a>
                             </td>
                         </tr>
                     }
                 }
             </tbody>
         </table>
-    </form>
-</div>
+    </p>
+</form>

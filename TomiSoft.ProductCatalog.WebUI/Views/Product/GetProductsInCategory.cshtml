@@ -1,0 +1,34 @@
+﻿
+@{
+    ViewData["Title"] = "GetProductsInCategory";
+}
+
+@using TomiSoft.ProductCatalog.BusinessModels
+
+<h1 class="display-4">Termékek a @ViewBag.Products.Category.LocalizedName kategóriában</h1>
+
+<p>
+    <a href="#" class="btn btn-lg btn-success">Új termék</a>
+</p>
+
+<p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Vonalkód</th>
+                <th>Név</th>
+                <th>Gyártó</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (LocalizedProductByCategoryBM product in ViewBag.Products.Products) {
+                <tr>
+                    <td><a href="/Product/Details?barcode=@product.Barcode&languageCode=hu-HU">@product.Barcode</a></td>
+                    <td>@product.LocalizedName</td>
+                    <td>@product.Manufacturer.Name</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</p>
