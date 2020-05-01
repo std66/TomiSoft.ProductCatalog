@@ -14,7 +14,7 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite {
             this.dbContext = dbContext;
         }
 
-        public Task<LocalizedProductBM> GetLocalizedProductAsync(string barcode, string languageCode) {
+        public async Task<LocalizedProductBM> GetLocalizedProductAsync(string barcode, string languageCode) {
             var query = from product in dbContext.Products
 
                     join productName in dbContext.ProductNames on product.Barcode equals productName.Barcode
@@ -42,7 +42,12 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite {
                         )
                     );
 
-            return query.SingleAsync();
+            try {
+                return await query.SingleAsync();
+            }
+            catch {
+                return null;
+            }
         }
 
         public async Task<IReadOnlyList<LocalizedProductByCategoryBM>> GetLocalizedProductByCategoryAsync(int categoryId, string languageCode) {
