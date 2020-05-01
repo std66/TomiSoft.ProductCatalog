@@ -1,0 +1,137 @@
+openapi: "3.0.0"
+info:
+  title: "TomiSoft Product Database Api"
+  version: "1.0"
+tags:
+  - name: Product
+    description: "This tag refers to product-related operations"
+paths:
+  /Product/{barcode}:
+    get:
+      tags: 
+        - Product
+      description: "Gets a product by barcode"
+      operationId: GetByBarcode
+      parameters: 
+        - $ref: '#/components/parameters/Barcode'
+      responses:
+        200:
+          description: "A product has been found with the given barcode"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductInformationDto"
+        404:
+          description: "No products were found with the given barcode"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResultDto"
+        500:
+          description: "Server error occurred"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResultDto"
+components:
+  parameters:
+    Barcode:
+      in: path
+      name: barcode
+      required: true
+      schema:
+        $ref: '#/components/schemas/Barcode'
+  schemas:
+    Barcode:
+      type: string
+      description: "The product's barcode"
+      example: "4047443305244"
+    ManufacturerId:
+      type: integer
+      format: int32
+      example: 341
+      description: "The unique identifier of the manufacturer"
+    ImageId:
+      type: integer
+      format: int32
+      example: 152341
+      description: "The unique ID of the image"
+    CategoryId:
+      type: integer
+      format: int32
+      example: 15
+      description: "The unique ID of the category"
+    ErrorResultDto:
+      type: object
+      properties:
+        ErrorCode:
+          type: string
+          description: "An error code representing the root cause of the failure"
+          enum:
+            - Successful
+            - GenericError
+            - UnauthorizedAccess
+            - ProductNotFound
+        Message:
+          type: string
+          description: "A human-friendly error message in English"
+          example: "No products found with the given barcode"
+    ManufacturerInfoDto:
+      type: object
+      description: "Brief information about a manufacturer"
+      properties:
+        ManufacturerId:
+          $ref: '#/components/schemas/ManufacturerId'
+        Name:
+          type: string
+          description: "The manufacturer's name"
+          example: "Hama GmbH & Co KG"
+        CountryCode:
+          type: string
+          description: "The manufacturer's country code in ISO 3166-2 format"
+          example: "DE"
+        Address:
+          type: string
+          description: "The address of the manufacturer's headquarters"
+          example: "86652 Monheim"
+        Website:
+          type: string
+          description: "The manufacturer's website"
+          nullable: true
+          example: "http://www.hama.com"
+    CategoryDto:
+      type: object
+      properties:
+        CategoryId:
+          $ref: '#/components/schemas/CategoryId'
+        Name:
+          type: string
+          description: "The category's name"
+          example: "Computer peripherals"
+    ProductImageDto:
+      type: object
+      properties:
+        ImageUrl:
+          type: string
+          description: "The URL of the image"
+          example: "http://somelocation.com/sample_product_image.jpg"
+        ImageID:
+          $ref: '#/components/schemas/ImageId'
+    ProductInformationDto:
+      type: object
+      properties:
+        Barcode:
+          $ref: "#/components/schemas/Barcode"
+        Name:
+          type: string
+          example: "Optical mouse AM-8000"
+          description: "The name of the product"
+        Manufacturer:
+          $ref: '#/components/schemas/ManufacturerInfoDto'
+        Images:
+          type: array
+          description: "Contains URLs to sample images of the product. If there are no images, this will be an empty array"
+          items:
+            $ref: '#/components/schemas/ProductImageDto'
+        Category:
+          $ref: '#/components/schemas/CategoryDto'

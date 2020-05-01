@@ -1,0 +1,29 @@
+{
+	"info": {
+		"_postman_id": "b522a9c5-2b65-4bf6-ba7e-1a2f3082c1ce",
+		"name": "TomiSoft ProductCatalog",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get product by barcode",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{scheme}}://{{serverUrl}}/Product/5998304067391",
+					"protocol": "{{scheme}}",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"Product",
+						"5998304067391"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

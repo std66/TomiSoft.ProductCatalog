@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TomiSoft.ProductCatalog.Data.Sqlite\TomiSoft.ProductCatalog.Data.Sqlite.csproj" />
+    <ProjectReference Include="..\TomiSoft.ProductCatalog.Server.OpenApiGenerated\TomiSoft.ProductCatalog.Server.OpenApiGenerated.csproj" />
+    <ProjectReference Include="..\TomiSoft.ProductCatalog\TomiSoft.ProductCatalog.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+  </ItemGroup>
+
+</Project>
