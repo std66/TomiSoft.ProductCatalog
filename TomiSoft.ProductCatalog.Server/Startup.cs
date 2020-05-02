@@ -20,7 +20,7 @@ namespace TomiSoft.ProductCatalog.Server {
                 .AddAutoMapper(typeof(Startup), typeof(Data.Sqlite.IServiceCollectionExtensions))
                 .AddProductCatalogServices()
                 .AddSqliteDataManagementLayer(Configuration["ConnectionStrings:DefaultConnection"])
-                .AddControllersWithViews();
+                .AddControllers().AddNewtonsoftJson();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
