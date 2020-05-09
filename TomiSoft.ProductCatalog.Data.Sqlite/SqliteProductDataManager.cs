@@ -22,7 +22,7 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite {
                     join category_name in dbContext.CategoryNames on category.Id equals category_name.CategoryId
                     join manufacturer in dbContext.Manufacturers on product.ManufacturerId equals manufacturer.Id
 
-                    where product.Barcode == barcode && category_name.LanguageCode == languageCode
+                    where product.Barcode == barcode && category_name.LanguageCode == languageCode && productName.LanguageCode == languageCode
 
                     select new LocalizedProductBM(
                         barcode,
@@ -45,7 +45,7 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite {
             try {
                 return await query.SingleAsync();
             }
-            catch {
+            catch (Exception e) {
                 return null;
             }
         }

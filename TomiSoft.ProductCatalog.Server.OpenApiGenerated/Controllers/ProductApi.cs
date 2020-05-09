@@ -29,7 +29,8 @@ namespace TomiSoft.ProductCatalog.Server.OpenApiGenerated.Controllers
         /// 
         /// </summary>
         /// <remarks>Gets a product by barcode</remarks>
-        /// <param name="barcode"></param>
+        /// <param name="barcode">The barcode of the requested product (eg. EAN-13).</param>
+        /// <param name="acceptLanguage">A list of the languages that the client accepts, as defined in RFC-7231, section 5.3.5. If not provided, or the server does not support any of the requested languages, the content will be returned in the server&#39;s default language. The operation with ID &#39;GetSupportedLanguages&#39; provides you all the languages supported by the server.</param>
         /// <response code="200">A product has been found with the given barcode</response>
         /// <response code="404">No products were found with the given barcode</response>
         /// <response code="500">Server error occurred</response>
@@ -39,6 +40,6 @@ namespace TomiSoft.ProductCatalog.Server.OpenApiGenerated.Controllers
         [ProducesResponseType(statusCode: 200, type: typeof(ProductInformationDto))]
         [ProducesResponseType(statusCode: 404, type: typeof(ErrorResultDto))]
         [ProducesResponseType(statusCode: 500, type: typeof(ErrorResultDto))]
-        public abstract Task<IActionResult> GetByBarcode([FromRoute][Required]string barcode);
+        public abstract Task<IActionResult> GetByBarcode([FromRoute][Required]string barcode, [FromHeader]string acceptLanguage);
     }
 }

@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TomiSoft.ProductCatalog.Data.Sqlite;
+using TomiSoft.ProductCatalog.Server.Configuration;
+using TomiSoft.ProductCatalog.Server.Helper;
 using TomiSoft.ProductCatalog.Server.Middleware;
 
 namespace TomiSoft.ProductCatalog.Server {
@@ -17,9 +19,19 @@ namespace TomiSoft.ProductCatalog.Server {
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services) {
             services
+                .AddOptions()
+                .Configure<LanguageConfiguration>(Configuration);
+
+            //delivery mechanism components
+            services
+                .AddScoped<ILocalizationHelper, LocalizationHelper>();
+
+            services
                 .AddAutoMapper(typeof(Startup), typeof(Data.Sqlite.IServiceCollectionExtensions))
                 .AddProductCatalogServices()
-                .AddSqliteDataManagementLayer(Configuration["ConnectionStrings:DefaultConnection"])
+                .AddSqliteDataManagementLayer(Configuration["ConnectionStrings:DefaultConnection"]);
+
+            services
                 .AddControllers().AddNewtonsoftJson();
         }
 

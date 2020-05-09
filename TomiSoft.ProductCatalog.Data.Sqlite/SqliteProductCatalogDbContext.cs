@@ -13,5 +13,15 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite {
             : base(options) {
 
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder) {
+            modelBuilder
+                .Entity<ECategoryName>()
+                .HasKey(c => new { c.CategoryId, c.LanguageCode });
+
+            modelBuilder
+                .Entity<EProductName>()
+                .HasKey(c => new { c.Barcode, c.LanguageCode });
+        }
     }
 }

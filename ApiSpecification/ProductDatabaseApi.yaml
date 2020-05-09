@@ -5,7 +5,29 @@ info:
 tags:
   - name: Product
     description: "This tag refers to product-related operations"
+  - name: System
+    description: "This tag refers to system-related operations"
 paths:
+  /SupportedLanguages:
+    get:
+      tags:
+        - System
+      description: "Gets the languages supported by the system"
+      operationId: GetSupportedLanguages
+      responses:
+        200:
+          description: "The request succeeded, and the server provided information about its language support"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SystemSupportedLanguagesDto'
+        500:
+          description: "Server error occurred"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResultDto"
+
   /Product/{barcode}:
     get:
       tags: 
@@ -13,6 +35,7 @@ paths:
       description: "Gets a product by barcode"
       operationId: GetByBarcode
       parameters: 
+        - $ref: '#/components/parameters/AcceptLanguage'
         - $ref: '#/components/parameters/Barcode'
       responses:
         200:
@@ -39,8 +62,17 @@ components:
       in: path
       name: barcode
       required: true
+      description: "The barcode of the requested product (eg. EAN-13)."
       schema:
         $ref: '#/components/schemas/Barcode'
+    AcceptLanguage:
+      in: header
+      name: "Accept-Language"
+      required: false
+      description: "A list of the languages that the client accepts, as defined in RFC-7231, section 5.3.5. If not provided, or the server does not support any of the requested languages, the content will be returned in the server's default language. The operation with ID 'GetSupportedLanguages' provides you all the languages supported by the server."
+      schema:
+        type: string
+        example: fr-CH, fr;q=0.9, en;q=0.8, de;q=0.7, *;q=0.5
   schemas:
     Barcode:
       type: string
@@ -76,6 +108,21 @@ components:
           type: string
           description: "A human-friendly error message in English"
           example: "No products found with the given barcode"
+    SystemSupportedLanguagesDto:
+      type: object
+      description: "Provides information about the languages supported by the system"
+      properties:
+        SupportedLanguages:
+          type: array
+          description: "Contains all the languages supported by the system. By providing one of these languages in Accept-Language header, you can get localized responses"
+          items:
+            type: string
+            description: "An IETF language tag"
+            example: "hu-HU"
+        DefaultLanguage:
+          type: string
+          description: "An IETF language tag representing the default language of the system. Used as a fallback value if Accept-Language is not provided in the request or it cannot be fulfilled"
+          example: "hu-HU"
     ManufacturerInfoDto:
       type: object
       description: "Brief information about a manufacturer"

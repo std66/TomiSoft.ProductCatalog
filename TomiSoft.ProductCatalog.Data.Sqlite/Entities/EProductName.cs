@@ -8,7 +8,7 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite.Entities {
         [Column("barcode"), Key, Required]
         public string Barcode { get; set; }
 
-        [Column("language_code"), Required]
+        [Column("language_code"), Key, Required]
         public string LanguageCode { get; set; }
         
         [Column("localized_name"), Required]
