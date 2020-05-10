@@ -3,8 +3,8 @@ using TomiSoft.ProductCatalog.BusinessModels;
 using TomiSoft.ProductCatalog.Data.Sqlite.Entities;
 
 namespace TomiSoft.ProductCatalog.Data.Sqlite.Mapping {
-    internal class ManufacturerProfile : Profile {
-        public ManufacturerProfile() {
+    internal class EManufacturerToManufacturerBMProfile : Profile {
+        public EManufacturerToManufacturerBMProfile() {
             AddEntityToBusinessModelMapper();
             AddBusinessModelToEntityMapper();
         }

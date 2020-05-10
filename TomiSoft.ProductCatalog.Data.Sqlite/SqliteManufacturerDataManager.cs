@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TomiSoft.ProductCatalog.BusinessModels;
 using TomiSoft.ProductCatalog.Data.Sqlite.Entities;
+using TomiSoft.ProductCatalog.Data.Sqlite.Entities.Projections;
 using TomiSoft.ProductCatalog.DataManagement;
 
 namespace TomiSoft.ProductCatalog.Data.Sqlite {
@@ -25,15 +27,20 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite {
             await dbContext.SaveChangesAsync();
         }
 
-        public Task<IReadOnlyList<ManufacturerBM>> GetAllAsync() {
-            List<ManufacturerBM> result = new List<ManufacturerBM>();
-            foreach (EManufacturer item in dbContext.Manufacturers) {
-                result.Add(
-                    mapper.Map<EManufacturer, ManufacturerBM>(item)
-                );
-            }
+        public async Task<IReadOnlyList<ManufacturerBM>> GetAllAsync() {
+            return await dbContext.Manufacturers
+                .ProjectTo<ManufacturerBM>(mapper.ConfigurationProvider)
+                .ToListAsync();
+        }
 
-            return Task.FromResult<IReadOnlyList<ManufacturerBM>>(result);
+        public async Task<IReadOnlyList<BriefManufacturerBM>> GetAllBriefAsync() {
+            List<PBriefManufacturer> list = await dbContext.Manufacturers
+                .ProjectTo<PBriefManufacturer>(mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            return list
+                .Select(x => mapper.Map<PBriefManufacturer, BriefManufacturerBM>(x))
+                .ToList();
         }
 
         public async Task<ManufacturerBM> GetAsync(int id) {

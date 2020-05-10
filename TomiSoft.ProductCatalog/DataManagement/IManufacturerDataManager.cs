@@ -9,6 +9,7 @@ namespace TomiSoft.ProductCatalog.DataManagement {
         Task<ManufacturerBM> InsertAsync(ManufacturerBM manufacturer);
         Task DeleteAsync(ManufacturerBM manufacturer);
         Task<IReadOnlyList<ManufacturerBM>> GetAllAsync();
+        Task<IReadOnlyList<BriefManufacturerBM>> GetAllBriefAsync();
         Task UpdateAsync(ManufacturerBM manufacturer);
     }
 }

@@ -32,6 +32,10 @@ namespace TomiSoft.ProductCatalog.Services {
             return dataManager.GetAllAsync();
         }
 
+        public Task<IReadOnlyList<BriefManufacturerBM>> GetAllManufacturersBriefAsync() {
+            return dataManager.GetAllBriefAsync();
+        }
+
         public async Task UpdateLogoAsync(int manufacturerId, ManufacturerLogoBM logo) {
             ManufacturerBM model = await dataManager.GetAsync(manufacturerId);
 

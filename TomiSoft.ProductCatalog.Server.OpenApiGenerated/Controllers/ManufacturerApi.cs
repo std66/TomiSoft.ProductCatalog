@@ -23,19 +23,19 @@ namespace TomiSoft.ProductCatalog.Server.OpenApiGenerated.Controllers
     /// 
     /// </summary>
     [ApiController]
-    public abstract class SystemApiController : ControllerBase
+    public abstract class ManufacturerApiController : ControllerBase
     { 
         /// <summary>
         /// 
         /// </summary>
-        /// <remarks>Gets the languages supported by the system</remarks>
-        /// <response code="200">The request succeeded, and the server provided information about its language support</response>
+        /// <remarks>Gets information about every known manufacturers</remarks>
+        /// <response code="200">The server successfully fulfilled the request and returned all the available manufacturer&#39;s information</response>
         /// <response code="500">Server error occurred</response>
         [HttpGet]
-        [Route("/SupportedLanguages")]
+        [Route("/Manufacturer")]
         [ValidateModelState]
-        [ProducesResponseType(statusCode: 200, type: typeof(SystemSupportedLanguagesDto))]
+        [ProducesResponseType(statusCode: 200, type: typeof(List<ManufacturerInfoDto>))]
         [ProducesResponseType(statusCode: 500, type: typeof(ErrorResultDto))]
-        public abstract Task<IActionResult> GetSupportedLanguages();
+        public abstract Task<IActionResult> GetAllManufacturers();
     }
 }

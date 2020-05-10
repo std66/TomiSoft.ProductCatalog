@@ -6,6 +6,7 @@ namespace TomiSoft.ProductCatalog {
         public static IServiceCollection AddProductCatalogServices(this IServiceCollection services) {
             return services
                 .AddScoped<IProductService, ProductService>()
+                .AddScoped<IManufacturerService, ManufacturerService>()
                 .AddScoped<ICategoryService, CategoryService>();
         }
     }

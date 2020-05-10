@@ -2,11 +2,18 @@ openapi: "3.0.0"
 info:
   title: "TomiSoft Product Database Api"
   version: "1.0"
+  description: "This document describes the API provided by the TomiSoft.ProductCatalog.Server microservice. This microservice provides information about products, based on barcode."
+  contact:
+    name: "Tamás Sinku"
+    url: "https://github.com/std66/TomiSoft.ProductCatalog"
+    email: "sinkutamas@gmail.com"
 tags:
   - name: Product
     description: "This tag refers to product-related operations"
   - name: System
     description: "This tag refers to system-related operations"
+  - name: Manufacturer
+    description: "This tag refers to manufacturer-related operations"
 paths:
   /SupportedLanguages:
     get:
@@ -21,6 +28,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SystemSupportedLanguagesDto'
+        500:
+          description: "Server error occurred"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResultDto"
+
+  /Manufacturer:
+    get:
+      tags:
+        - Manufacturer
+      description: "Gets information about every known manufacturers"
+      operationId: GetAllManufacturers
+      responses:
+        200:
+          description: "The server successfully fulfilled the request and returned all the available manufacturer's information"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ManufacturerInfoDto'
         500:
           description: "Server error occurred"
           content:
