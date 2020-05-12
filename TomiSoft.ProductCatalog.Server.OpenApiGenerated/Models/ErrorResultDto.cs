@@ -58,7 +58,13 @@ namespace TomiSoft.ProductCatalog.Server.OpenApiGenerated.Models
             /// Enum ProductNotFoundEnum for ProductNotFound
             /// </summary>
             [EnumMember(Value = "ProductNotFound")]
-            ProductNotFoundEnum = 4
+            ProductNotFoundEnum = 4,
+            
+            /// <summary>
+            /// Enum ProductAlreadyExistsEnum for ProductAlreadyExists
+            /// </summary>
+            [EnumMember(Value = "ProductAlreadyExists")]
+            ProductAlreadyExistsEnum = 5
         }
 
         /// <summary>

@@ -29,11 +29,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/SystemSupportedLanguagesDto'
         500:
-          description: "Server error occurred"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResultDto"
+          $ref: '#/components/responses/ServerErrorResponse'
 
   /Manufacturer:
     get:
@@ -51,11 +47,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/ManufacturerInfoDto'
         500:
-          description: "Server error occurred"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResultDto"
+          $ref: '#/components/responses/ServerErrorResponse'
 
   /Product/{barcode}:
     get:
@@ -80,11 +72,39 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResultDto"
         500:
-          description: "Server error occurred"
+          $ref: '#/components/responses/ServerErrorResponse'
+                
+    post:
+      tags:
+        - Product
+      description: "Saves a new product with the given barcode"
+      operationId: PostNewProduct
+      parameters: 
+        - $ref: '#/components/parameters/Barcode'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostProductRequestDto'
+      responses:
+        204:
+          description: "The new product has been saved successfully."
+        400:
+          description: "The request could not be fulfilled because it contains incorrect data."
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResultDto"
+        409:
+          description: "A product with the given barcode already exists."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResultDto"
+        500:
+          $ref: '#/components/responses/ServerErrorResponse'
+        
+    
 components:
   parameters:
     Barcode:
@@ -102,6 +122,13 @@ components:
       schema:
         type: string
         example: fr-CH, fr;q=0.9, en;q=0.8, de;q=0.7, *;q=0.5
+  responses:
+    ServerErrorResponse:
+      description: "Server error occurred"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResultDto"
   schemas:
     Barcode:
       type: string
@@ -133,10 +160,27 @@ components:
             - GenericError
             - UnauthorizedAccess
             - ProductNotFound
+            - ProductAlreadyExists
         Message:
           type: string
           description: "A human-friendly error message in English"
-          example: "No products found with the given barcode"
+          example: "No products were found with the specified barcode"
+    PostProductRequestDto:
+      type: object
+      description: "Provides information about a product that needs to be saved"
+      properties:
+        ManufacturerId:
+          $ref: '#/components/schemas/ManufacturerId'
+        CategoryId:
+          $ref: '#/components/schemas/CategoryId'
+        ProductName:
+          description: "A key-value pair object representing the product name for a specific language."
+          type: object
+          additionalProperties:
+            type: string
+          example: 
+            hu-HU: "Példa termék"
+            en-US: "Sample product"
     SystemSupportedLanguagesDto:
       type: object
       description: "Provides information about the languages supported by the system"

@@ -9,7 +9,13 @@
 			"name": "Get product by barcode",
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Accept-Language",
+						"value": "{{acceptLanguage}}",
+						"type": "text"
+					}
+				],
 				"url": {
 					"raw": "{{scheme}}://{{serverUrl}}/Product/5998304067391",
 					"protocol": "{{scheme}}",
@@ -19,6 +25,70 @@
 					"path": [
 						"Product",
 						"5998304067391"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get supported languages",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{scheme}}://{{serverUrl}}/SupportedLanguages",
+					"protocol": "{{scheme}}",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"SupportedLanguages"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all manufacturers",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{scheme}}://{{serverUrl}}/Manufacturer",
+					"protocol": "{{scheme}}",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"Manufacturer"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add product",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"ManufacturerId\": 14,\r\n  \"CategoryId\": 5,\r\n  \"ProductName\": {\r\n    \"hu-HU\": \"Szerszám szett\",\r\n    \"en-US\": \"Tools set\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{scheme}}://{{serverUrl}}/Product/5906803589993",
+					"protocol": "{{scheme}}",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"Product",
+						"5906803589993"
 					]
 				}
 			},

@@ -41,5 +41,23 @@ namespace TomiSoft.ProductCatalog.Server.OpenApiGenerated.Controllers
         [ProducesResponseType(statusCode: 404, type: typeof(ErrorResultDto))]
         [ProducesResponseType(statusCode: 500, type: typeof(ErrorResultDto))]
         public abstract Task<IActionResult> GetByBarcode([FromRoute][Required]string barcode, [FromHeader]string acceptLanguage);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>Saves a new product with the given barcode</remarks>
+        /// <param name="barcode">The barcode of the requested product (eg. EAN-13).</param>
+        /// <param name="postProductRequestDto"></param>
+        /// <response code="204">The new product has been saved successfully.</response>
+        /// <response code="400">The request could not be fulfilled because it contains incorrect data.</response>
+        /// <response code="409">A product with the given barcode already exists.</response>
+        /// <response code="500">Server error occurred</response>
+        [HttpPost]
+        [Route("/Product/{barcode}")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 400, type: typeof(ErrorResultDto))]
+        [ProducesResponseType(statusCode: 409, type: typeof(ErrorResultDto))]
+        [ProducesResponseType(statusCode: 500, type: typeof(ErrorResultDto))]
+        public abstract Task<IActionResult> PostNewProduct([FromRoute][Required]string barcode, [FromBody]PostProductRequestDto postProductRequestDto);
     }
 }
