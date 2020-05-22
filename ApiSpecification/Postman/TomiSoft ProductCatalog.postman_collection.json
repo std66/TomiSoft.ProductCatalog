@@ -93,6 +93,25 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Delete product by barcode",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{scheme}}://{{serverUrl}}/Product/teszt",
+					"protocol": "{{scheme}}",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"Product",
+						"teszt"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"protocolProfileBehavior": {}

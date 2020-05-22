@@ -5,7 +5,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TomiSoft.ProductCatalog.BusinessModels;
+using TomiSoft.ProductCatalog.BusinessModels.Explanations;
+using TomiSoft.ProductCatalog.BusinessModels.OperationResult;
 using TomiSoft.ProductCatalog.BusinessModels.Request;
+using TomiSoft.ProductCatalog.Data.Sqlite.Entities;
 using TomiSoft.ProductCatalog.DataManagement;
 
 namespace TomiSoft.ProductCatalog.Data.Sqlite {
@@ -16,7 +19,7 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite {
             this.dbContext = dbContext;
         }
 
-        public async Task<bool> CreateProduct(CreateProductRequestBM createProductRequest) {
+        public async Task<bool> CreateProductAsync(CreateProductRequestBM createProductRequest) {
             using (IDbContextTransaction transaction = await dbContext.Database.BeginTransactionAsync()) {
                 try {
                     await dbContext.Products.AddAsync(new Entities.EProduct() {
@@ -45,7 +48,29 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite {
 
             return true;
         }
-        
+
+        public async Task<EmptyResultBM<DeleteProductExplanation>> DeleteProductAsync(string barcode) {
+            try {
+                EProduct productToDelete = await dbContext.Products.SingleAsync(x => x.Barcode == barcode);
+
+                dbContext.ProductNames.RemoveRange(
+                    dbContext.ProductNames.Where(x => x.Barcode == barcode)
+                );
+
+                dbContext.Products.Remove(productToDelete);
+
+                await dbContext.SaveChangesAsync();
+            }
+            catch (InvalidOperationException e) {
+                return new EmptyResultBM<DeleteProductExplanation>(DeleteProductExplanation.ProductNotExists);
+            }
+            catch (Exception) {
+                return new EmptyResultBM<DeleteProductExplanation>(DeleteProductExplanation.DatabaseError);
+            }
+
+            return new EmptyResultBM<DeleteProductExplanation>();
+        }
+
         public async Task<LocalizedProductBM> GetLocalizedProductAsync(string barcode, string languageCode) {
             var query = from product in dbContext.Products
                         join productName in dbContext.ProductNames on product.Barcode equals productName.Barcode
@@ -124,10 +149,10 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite {
 
         public async Task<IReadOnlyDictionary<int, int>> GetNumberOfProductsInCategoriesAsync(params int[] categoryIds) {
             var query = from product in dbContext.Products
-                        where categoryIds.Contains(product.CategoryId)
+                        where product.CategoryId.HasValue ? categoryIds.Contains(product.CategoryId.Value) : false
                         group product by product.CategoryId into groups
                         select new {
-                            Id = groups.Key,
+                            Id = groups.Key.Value,
                             Count = groups.Count()
                         };
 
@@ -139,7 +164,7 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite {
             return result;
         }
 
-        public Task<bool> ProductExistsWithBarcode(string barcode) {
+        public Task<bool> ProductExistsWithBarcodeAsync(string barcode) {
             return dbContext.Products.AnyAsync(x => x.Barcode == barcode);
         }
     }

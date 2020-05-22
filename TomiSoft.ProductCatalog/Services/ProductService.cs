@@ -15,16 +15,20 @@ namespace TomiSoft.ProductCatalog.Services {
             this.categoryDataManager = categoryDataManager;
         }
 
-        public async Task<ResultBM<EmptyBM, CreateProductExplanation>> CreateProduct(CreateProductRequestBM createProductRequest) {
-            if (await productDataManager.ProductExistsWithBarcode(createProductRequest.Barcode)) {
-                return new FailureResultBM<EmptyBM, CreateProductExplanation>(CreateProductExplanation.ProductWithBarcodeAlreadyExists);
+        public async Task<EmptyResultBM<CreateProductExplanation>> CreateProductAsync(CreateProductRequestBM createProductRequest) {
+            if (await productDataManager.ProductExistsWithBarcodeAsync(createProductRequest.Barcode)) {
+                return new EmptyResultBM<CreateProductExplanation>(CreateProductExplanation.ProductWithBarcodeAlreadyExists);
             }
 
-            if (!await productDataManager.CreateProduct(createProductRequest)) {
-                return new FailureResultBM<EmptyBM, CreateProductExplanation>(CreateProductExplanation.DatabaseError);
+            if (!await productDataManager.CreateProductAsync(createProductRequest)) {
+                return new EmptyResultBM<CreateProductExplanation>(CreateProductExplanation.DatabaseError);
             }
 
-            return new SuccessfulResultBM<EmptyBM, CreateProductExplanation>(EmptyBM.Instance);
+            return new EmptyResultBM<CreateProductExplanation>();
+        }
+
+        public Task<EmptyResultBM<DeleteProductExplanation>> DeleteProductAsync(string barcode) {
+            return productDataManager.DeleteProductAsync(barcode);
         }
 
         public Task<LocalizedProductBM> GetProductAsync(string barcode, string languageCode) {

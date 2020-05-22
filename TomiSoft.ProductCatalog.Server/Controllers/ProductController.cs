@@ -24,6 +24,38 @@ namespace TomiSoft.ProductCatalog.Server.Controllers {
             this.localizationHelper = localizationHelper;
         }
 
+        public override async Task<IActionResult> DeleteByBarcode(
+            [FromRoute, Required] string barcode
+        ) {
+            EmptyResultBM<DeleteProductExplanation> result = await productService.DeleteProductAsync(barcode);
+
+            if (!result.Successful) {
+                switch (result.Explanation) {
+                    case DeleteProductExplanation.DatabaseError:
+                        return new ApiResult(
+                            new ErrorResultDto() {
+                                ErrorCode = ErrorResultDto.ErrorCodeEnum.GenericErrorEnum,
+                                Message = "Unknown error occurred."
+                            },
+
+                            HttpStatusCode.InternalServerError
+                        );
+
+                    case DeleteProductExplanation.ProductNotExists:
+                        return new ApiResult(
+                            new ErrorResultDto() {
+                                ErrorCode = ErrorResultDto.ErrorCodeEnum.ProductNotFoundEnum,
+                                Message = "Product was not found with the given barcode"
+                            },
+
+                            HttpStatusCode.NotFound
+                        );
+                }
+            }
+
+            return NoContent();
+        }
+
         public override async Task<IActionResult> GetByBarcode(
             [FromRoute, Required] string barcode,
             [FromHeader(Name = "Accept-Language")] string acceptLanguage
@@ -53,7 +85,7 @@ namespace TomiSoft.ProductCatalog.Server.Controllers {
         ) {
             CreateProductRequestBM request = new CreateProductRequestBM(barcode, postProductRequestDto.ManufacturerId, postProductRequestDto.CategoryId, postProductRequestDto.ProductName);
 
-            ResultBM<EmptyBM, CreateProductExplanation> result = await productService.CreateProduct(request);
+            EmptyResultBM<CreateProductExplanation> result = await productService.CreateProductAsync(request);
 
             if (result.Successful) {
                 return new NoContentResult();

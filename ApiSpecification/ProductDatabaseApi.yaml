@@ -66,11 +66,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProductInformationDto"
         404:
-          description: "No products were found with the given barcode"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResultDto"
+          $ref: '#/components/responses/ProductNotFoundResponse'
         500:
           $ref: '#/components/responses/ServerErrorResponse'
                 
@@ -103,6 +99,21 @@ paths:
                 $ref: "#/components/schemas/ErrorResultDto"
         500:
           $ref: '#/components/responses/ServerErrorResponse'
+          
+    delete:
+      tags:
+        - Product
+      description: "Deletes a product along with all its associated contents (images)."
+      operationId: DeleteByBarcode
+      parameters: 
+        - $ref: '#/components/parameters/Barcode'
+      responses:
+        204:
+          description: "The product is successfully deleted."
+        404:
+          $ref: '#/components/responses/ProductNotFoundResponse'
+        500:
+          $ref: '#/components/responses/ServerErrorResponse'
         
     
 components:
@@ -123,6 +134,12 @@ components:
         type: string
         example: fr-CH, fr;q=0.9, en;q=0.8, de;q=0.7, *;q=0.5
   responses:
+    ProductNotFoundResponse:
+      description: "No products were found with the given barcode"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResultDto"
     ServerErrorResponse:
       description: "Server error occurred"
       content:
@@ -161,6 +178,7 @@ components:
             - UnauthorizedAccess
             - ProductNotFound
             - ProductAlreadyExists
+          example: "ProductNotFound"
         Message:
           type: string
           description: "A human-friendly error message in English"
@@ -191,7 +209,11 @@ components:
           items:
             type: string
             description: "An IETF language tag"
-            example: "hu-HU"
+            example:
+              - "hu-HU"
+              - "en-US"
+              - "zh-CN"
+              - "ja-JP"
         DefaultLanguage:
           type: string
           description: "An IETF language tag representing the default language of the system. Used as a fallback value if Accept-Language is not provided in the request or it cannot be fulfilled"

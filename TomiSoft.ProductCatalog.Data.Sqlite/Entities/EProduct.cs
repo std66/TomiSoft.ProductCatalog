@@ -9,10 +9,10 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite.Entities {
         public string Barcode { get; set; }
 
         [Column("category_id")]
-        public int CategoryId { get; set; }
+        public int? CategoryId { get; set; }
 
         [Column("manufacturer_id")]
-        public int ManufacturerId { get; set; }
+        public int? ManufacturerId { get; set; }
 
         [ForeignKey(nameof(CategoryId))]
         public ECategory Category { get; set; }

@@ -1,33 +1,17 @@
 ﻿using System;
 
 namespace TomiSoft.ProductCatalog.BusinessModels.OperationResult {
-    public abstract class ResultBM<TResult, TExplanation>
+    public abstract class ResultBM<TResult, TExplanation> : EmptyResultBM<TExplanation>
         where TExplanation : struct
         where TResult : class {
-        private TExplanation explanation;
+        
         private TResult obj;
 
-        private ResultBM(bool successful) {
-            Successful = successful;
+        public ResultBM(TExplanation explanation) : base(explanation) {
         }
 
-        public ResultBM(TExplanation explanation) : this(false) {
-            this.explanation = explanation;
-        }
-
-        public ResultBM(TResult result) : this(true) {
+        public ResultBM(TResult result) : base() {
             this.obj = result ?? throw new ArgumentNullException(nameof(result));
-        }
-
-        public bool Successful { get; }
-
-        public TExplanation Explanation {
-            get {
-                if (Successful)
-                    throw new InvalidOperationException($"{nameof(Explanation)} is not available for successful operations.");
-
-                return explanation; 
-            }
         }
 
         public TResult Object {
@@ -38,6 +22,5 @@ namespace TomiSoft.ProductCatalog.BusinessModels.OperationResult {
                 return obj;
             }
         }
-
     }
 }

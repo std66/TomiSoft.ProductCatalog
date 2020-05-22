@@ -8,6 +8,7 @@ namespace TomiSoft.ProductCatalog.Services {
     public interface IProductService {
         Task<LocalizedProductBM> GetProductAsync(string barcode, string languageCode);
         Task<GetProductsByCategoryResultBM> GetProductsByCategoryAsync(int categoryId, string languageCode);
-        Task<ResultBM<EmptyBM, CreateProductExplanation>> CreateProduct(CreateProductRequestBM createProductRequest);
+        Task<EmptyResultBM<CreateProductExplanation>> CreateProductAsync(CreateProductRequestBM createProductRequest);
+        Task<EmptyResultBM<DeleteProductExplanation>> DeleteProductAsync(string barcode);
     }
 }
