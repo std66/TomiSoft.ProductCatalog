@@ -45,39 +45,56 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite {
 
             return true;
         }
-
+        
         public async Task<LocalizedProductBM> GetLocalizedProductAsync(string barcode, string languageCode) {
             var query = from product in dbContext.Products
+                        join productName in dbContext.ProductNames on product.Barcode equals productName.Barcode
 
-                    join productName in dbContext.ProductNames on product.Barcode equals productName.Barcode
-                    join category in dbContext.Categories on product.CategoryId equals category.Id
-                    join category_name in dbContext.CategoryNames on category.Id equals category_name.CategoryId
-                    join manufacturer in dbContext.Manufacturers on product.ManufacturerId equals manufacturer.Id
+                        join selected_category in dbContext.Categories on product.CategoryId equals selected_category.Id into product_category_join
 
-                    where product.Barcode == barcode && category_name.LanguageCode == languageCode && productName.LanguageCode == languageCode
+                        from category in product_category_join.DefaultIfEmpty()
+                        join selected_categoryName in dbContext.CategoryNames on category.Id equals selected_categoryName.CategoryId into category_categoryname_join
 
-                    select new LocalizedProductBM(
-                        barcode,
-                        languageCode,
-                        productName.LocalizedName,
-                        new LocalizedCategoryBM(
-                            category.Id,
+                        from categoryName in category_categoryname_join.DefaultIfEmpty()
+                        join selected_manufacturer in dbContext.Manufacturers on product.ManufacturerId equals selected_manufacturer.Id into product_manufacturer_join
+
+                        from manufacturer in product_manufacturer_join.DefaultIfEmpty()
+
+                        where
+                            product.Barcode == barcode &&
+                            productName.LanguageCode == languageCode &&
+                            (categoryName == null ? true : categoryName.LanguageCode == languageCode)
+
+                        select new LocalizedProductBM(
+                            //product
+                            barcode,
                             languageCode,
-                            category_name.LocalizedName,
-                            category.ParentId
-                        ),
-                        new BriefManufacturerBM(
-                            manufacturer.Id,
-                            manufacturer.Name,
-                            new ManufacturerLocationBM(manufacturer.CountryCode, manufacturer.Address),
-                            new Uri(manufacturer.WebsiteUri)
-                        )
-                    );
+                            productName.LocalizedName,
+
+                            //category
+                            category == null ? null : new LocalizedCategoryBM(
+                                (int?)category.Id ?? 0,
+                                categoryName.LanguageCode,
+                                categoryName.LocalizedName,
+                                category.ParentId
+                            ),
+
+                            //manufacturer
+                            manufacturer == null ? null : new BriefManufacturerBM(
+                                (int?)manufacturer.Id ?? 0,
+                                manufacturer.Name,
+                                new ManufacturerLocationBM(
+                                    manufacturer.CountryCode,
+                                    manufacturer.Address
+                                ),
+                                new Uri(manufacturer.WebsiteUri)
+                            )
+                        );
 
             try {
                 return await query.SingleAsync();
             }
-            catch (Exception e) {
+            catch (Exception) {
                 return null;
             }
         }

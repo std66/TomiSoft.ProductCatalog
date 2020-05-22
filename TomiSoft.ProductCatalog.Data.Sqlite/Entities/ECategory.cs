@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -10,6 +11,9 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite.Entities {
 
         [Column("parent_id")]
         public int? ParentId { get; set; }
+
+        [ForeignKey(nameof(ECategoryName.CategoryId))]
+        public List<ECategoryName> CategoryNames { get; set; }
 
         public override bool Equals(object obj) {
             return Equals(obj as ECategory);
