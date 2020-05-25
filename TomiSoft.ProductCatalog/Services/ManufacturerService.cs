@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TomiSoft.ProductCatalog.BusinessModels;
+using TomiSoft.ProductCatalog.BusinessModels.Explanations;
+using TomiSoft.ProductCatalog.BusinessModels.OperationResult;
 using TomiSoft.ProductCatalog.DataManagement;
 
 namespace TomiSoft.ProductCatalog.Services {
@@ -12,7 +14,7 @@ namespace TomiSoft.ProductCatalog.Services {
             this.dataManager = dataManager;
         }
 
-        public async Task<ManufacturerBM> AddManufacturerAsync(string name, ManufacturerLocationBM location, Uri website = null, ManufacturerLogoBM logo = null) {
+        public Task<ResultBM<ManufacturerBM, AddManufacturerExplanation>> AddManufacturerAsync(string name, ManufacturerLocationBM location, Uri website = null, ManufacturerLogoBM logo = null) {
             ManufacturerBM manufacturer = new ManufacturerBM(
                 manufacturerId: default,
                 name: name,
@@ -21,7 +23,7 @@ namespace TomiSoft.ProductCatalog.Services {
                 logo: logo
             );
 
-            return await dataManager.InsertAsync(manufacturer);
+            return dataManager.InsertAsync(manufacturer);
         }
 
         public Task<ManufacturerBM> GetManufacturerAsync(int manufacturerId) {

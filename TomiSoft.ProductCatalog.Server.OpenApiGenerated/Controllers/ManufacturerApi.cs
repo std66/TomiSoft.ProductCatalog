@@ -37,5 +37,19 @@ namespace TomiSoft.ProductCatalog.Server.OpenApiGenerated.Controllers
         [ProducesResponseType(statusCode: 200, type: typeof(List<ManufacturerInfoDto>))]
         [ProducesResponseType(statusCode: 500, type: typeof(ErrorResultDto))]
         public abstract Task<IActionResult> GetAllManufacturers();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>Saves a new manufacturer</remarks>
+        /// <param name="postManufacturerRequestDto"></param>
+        /// <response code="201">The manufacturer has been successfully created.</response>
+        /// <response code="500">Server error occurred</response>
+        [HttpPost]
+        [Route("/Manufacturer")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 201, type: typeof(PostManufacturerResponseDto))]
+        [ProducesResponseType(statusCode: 500, type: typeof(ErrorResultDto))]
+        public abstract Task<IActionResult> PostNewManufacturer([FromBody]PostManufacturerRequestDto postManufacturerRequestDto);
     }
 }

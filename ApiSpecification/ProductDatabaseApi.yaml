@@ -48,6 +48,26 @@ paths:
                   $ref: '#/components/schemas/ManufacturerInfoDto'
         500:
           $ref: '#/components/responses/ServerErrorResponse'
+          
+    post:
+      tags:
+        - Manufacturer
+      description: "Saves a new manufacturer"
+      operationId: PostNewManufacturer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostManufacturerRequestDto'
+      responses:
+        201:
+          description: "The manufacturer has been successfully created."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostManufacturerResponseDto'
+        500:
+          $ref: '#/components/responses/ServerErrorResponse'
 
   /Product/{barcode}:
     get:
@@ -183,6 +203,36 @@ components:
           type: string
           description: "A human-friendly error message in English"
           example: "No products were found with the specified barcode"
+    PostManufacturerRequestDto:
+      type: object
+      description: "Provides information about a manufacturer that needs to be saved"
+      properties:
+        Name:
+          type: string
+          description: "The manufacturer's legal name"
+          example: "Hama GmbH & Co KG"
+        Country:
+          type: string
+          description: "The ISO 3166-2 code of the country in which the manufacturer is registered"
+          example: "DE"
+        Address:
+          type: string
+          description: "The manufacturer's legal address"
+          example: "86652 Monheim"
+        Website:
+          type: string
+          description: "The URI of the manufacturer's official website"
+          example: "https://www.hama.com"
+      required: 
+        - Name
+        - Country
+        - Address
+    PostManufacturerResponseDto:
+      type: object
+      description: "Provides information about a manufacturer that needs to be saved"
+      properties:
+        ManufacturerID:
+          $ref: '#/components/schemas/ManufacturerId'
     PostProductRequestDto:
       type: object
       description: "Provides information about a product that needs to be saved"
@@ -199,6 +249,8 @@ components:
           example: 
             hu-HU: "Példa termék"
             en-US: "Sample product"
+      required:
+        - ProductName
     SystemSupportedLanguagesDto:
       type: object
       description: "Provides information about the languages supported by the system"

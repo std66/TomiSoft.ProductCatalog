@@ -61,7 +61,7 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite {
 
                 await dbContext.SaveChangesAsync();
             }
-            catch (InvalidOperationException e) {
+            catch (InvalidOperationException) {
                 return new EmptyResultBM<DeleteProductExplanation>(DeleteProductExplanation.ProductNotExists);
             }
             catch (Exception) {

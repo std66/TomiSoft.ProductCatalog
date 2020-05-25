@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using TomiSoft.ProductCatalog.Server.Configuration;
 using TomiSoft.ProductCatalog.Server.OpenApiGenerated.Controllers;
 using TomiSoft.ProductCatalog.Server.OpenApiGenerated.Models;
+using TomiSoft.ProductCatalog.Server.Result;
 
 namespace TomiSoft.ProductCatalog.Server.Controllers {
     public class SystemController : SystemApiController {

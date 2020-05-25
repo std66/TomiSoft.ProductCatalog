@@ -21,32 +21,17 @@ using TomiSoft.ProductCatalog.Server.OpenApiGenerated.Converters;
 namespace TomiSoft.ProductCatalog.Server.OpenApiGenerated.Models
 { 
     /// <summary>
-    /// Provides information about a product that needs to be saved
+    /// Provides information about a manufacturer that needs to be saved
     /// </summary>
     [DataContract]
-    public class PostProductRequestDto : IEquatable<PostProductRequestDto>
+    public class PostManufacturerResponseDto : IEquatable<PostManufacturerResponseDto>
     {
         /// <summary>
         /// The unique identifier of the manufacturer
         /// </summary>
         /// <value>The unique identifier of the manufacturer</value>
-        [DataMember(Name="ManufacturerId", EmitDefaultValue=false)]
-        public int ManufacturerId { get; set; }
-
-        /// <summary>
-        /// The unique ID of the category
-        /// </summary>
-        /// <value>The unique ID of the category</value>
-        [DataMember(Name="CategoryId", EmitDefaultValue=false)]
-        public int CategoryId { get; set; }
-
-        /// <summary>
-        /// A key-value pair object representing the product name for a specific language.
-        /// </summary>
-        /// <value>A key-value pair object representing the product name for a specific language.</value>
-        [Required]
-        [DataMember(Name="ProductName", EmitDefaultValue=false)]
-        public Dictionary<string, string> ProductName { get; set; }
+        [DataMember(Name="ManufacturerID", EmitDefaultValue=false)]
+        public int ManufacturerID { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -55,10 +40,8 @@ namespace TomiSoft.ProductCatalog.Server.OpenApiGenerated.Models
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class PostProductRequestDto {\n");
-            sb.Append("  ManufacturerId: ").Append(ManufacturerId).Append("\n");
-            sb.Append("  CategoryId: ").Append(CategoryId).Append("\n");
-            sb.Append("  ProductName: ").Append(ProductName).Append("\n");
+            sb.Append("class PostManufacturerResponseDto {\n");
+            sb.Append("  ManufacturerID: ").Append(ManufacturerID).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -81,35 +64,24 @@ namespace TomiSoft.ProductCatalog.Server.OpenApiGenerated.Models
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((PostProductRequestDto)obj);
+            return obj.GetType() == GetType() && Equals((PostManufacturerResponseDto)obj);
         }
 
         /// <summary>
-        /// Returns true if PostProductRequestDto instances are equal
+        /// Returns true if PostManufacturerResponseDto instances are equal
         /// </summary>
-        /// <param name="other">Instance of PostProductRequestDto to be compared</param>
+        /// <param name="other">Instance of PostManufacturerResponseDto to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(PostProductRequestDto other)
+        public bool Equals(PostManufacturerResponseDto other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
 
             return 
                 (
-                    ManufacturerId == other.ManufacturerId ||
+                    ManufacturerID == other.ManufacturerID ||
                     
-                    ManufacturerId.Equals(other.ManufacturerId)
-                ) && 
-                (
-                    CategoryId == other.CategoryId ||
-                    
-                    CategoryId.Equals(other.CategoryId)
-                ) && 
-                (
-                    ProductName == other.ProductName ||
-                    ProductName != null &&
-                    other.ProductName != null &&
-                    ProductName.SequenceEqual(other.ProductName)
+                    ManufacturerID.Equals(other.ManufacturerID)
                 );
         }
 
@@ -124,11 +96,7 @@ namespace TomiSoft.ProductCatalog.Server.OpenApiGenerated.Models
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
                     
-                    hashCode = hashCode * 59 + ManufacturerId.GetHashCode();
-                    
-                    hashCode = hashCode * 59 + CategoryId.GetHashCode();
-                    if (ProductName != null)
-                    hashCode = hashCode * 59 + ProductName.GetHashCode();
+                    hashCode = hashCode * 59 + ManufacturerID.GetHashCode();
                 return hashCode;
             }
         }
@@ -136,12 +104,12 @@ namespace TomiSoft.ProductCatalog.Server.OpenApiGenerated.Models
         #region Operators
         #pragma warning disable 1591
 
-        public static bool operator ==(PostProductRequestDto left, PostProductRequestDto right)
+        public static bool operator ==(PostManufacturerResponseDto left, PostManufacturerResponseDto right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(PostProductRequestDto left, PostProductRequestDto right)
+        public static bool operator !=(PostManufacturerResponseDto left, PostManufacturerResponseDto right)
         {
             return !Equals(left, right);
         }

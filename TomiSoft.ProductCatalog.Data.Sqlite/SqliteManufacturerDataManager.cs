@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TomiSoft.ProductCatalog.BusinessModels;
+using TomiSoft.ProductCatalog.BusinessModels.Explanations;
+using TomiSoft.ProductCatalog.BusinessModels.OperationResult;
 using TomiSoft.ProductCatalog.Data.Sqlite.Entities;
 using TomiSoft.ProductCatalog.Data.Sqlite.Entities.Projections;
 using TomiSoft.ProductCatalog.DataManagement;
@@ -59,13 +62,23 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite {
             return new ManufacturerLogoBM(data.Data, data.MimeType);
         }
 
-        public async Task<ManufacturerBM> InsertAsync(ManufacturerBM manufacturer) {
+        public async Task<ResultBM<ManufacturerBM, AddManufacturerExplanation>> InsertAsync(ManufacturerBM manufacturer) {
             EManufacturer entity = mapper.Map<ManufacturerBM, EManufacturer>(manufacturer);
 
-            await dbContext.Manufacturers.AddAsync(entity);
-            await dbContext.SaveChangesAsync();
+            try {
+                await dbContext.Manufacturers.AddAsync(entity);
+                await dbContext.SaveChangesAsync();
 
-            return mapper.Map<EManufacturer, ManufacturerBM>(entity);
+                return new SuccessfulResultBM<ManufacturerBM, AddManufacturerExplanation>(
+                    mapper.Map<EManufacturer, ManufacturerBM>(entity)
+                );
+            }
+            catch (DbUpdateException) {
+                return new FailureResultBM<ManufacturerBM, AddManufacturerExplanation>(AddManufacturerExplanation.DatabaseError);
+            }
+            catch (Exception) {
+                return new FailureResultBM<ManufacturerBM, AddManufacturerExplanation>(AddManufacturerExplanation.GenericError);
+            }
         }
 
         public async Task UpdateAsync(ManufacturerBM manufacturer) {

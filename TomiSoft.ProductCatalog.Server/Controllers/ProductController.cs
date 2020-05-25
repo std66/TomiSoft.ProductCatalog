@@ -10,6 +10,7 @@ using TomiSoft.ProductCatalog.BusinessModels.Request;
 using TomiSoft.ProductCatalog.Server.Helper;
 using TomiSoft.ProductCatalog.Server.OpenApiGenerated.Controllers;
 using TomiSoft.ProductCatalog.Server.OpenApiGenerated.Models;
+using TomiSoft.ProductCatalog.Server.Result;
 using TomiSoft.ProductCatalog.Services;
 
 namespace TomiSoft.ProductCatalog.Server.Controllers {
@@ -32,22 +33,12 @@ namespace TomiSoft.ProductCatalog.Server.Controllers {
             if (!result.Successful) {
                 switch (result.Explanation) {
                     case DeleteProductExplanation.DatabaseError:
-                        return new ApiResult(
-                            new ErrorResultDto() {
-                                ErrorCode = ErrorResultDto.ErrorCodeEnum.GenericErrorEnum,
-                                Message = "Unknown error occurred."
-                            },
-
-                            HttpStatusCode.InternalServerError
-                        );
+                        return new ApiGenericErrorResult();
 
                     case DeleteProductExplanation.ProductNotExists:
-                        return new ApiResult(
-                            new ErrorResultDto() {
-                                ErrorCode = ErrorResultDto.ErrorCodeEnum.ProductNotFoundEnum,
-                                Message = "Product was not found with the given barcode"
-                            },
-
+                        return new ApiErrorResult(
+                            ErrorResultDto.ErrorCodeEnum.ProductNotFoundEnum,
+                            "Product was not found with the given barcode",
                             HttpStatusCode.NotFound
                         );
                 }
@@ -64,12 +55,9 @@ namespace TomiSoft.ProductCatalog.Server.Controllers {
             LocalizedProductBM result = await productService.GetProductAsync(barcode, languageCode);
             
             if (result == null) {
-                return new ApiResult(
-                    new ErrorResultDto() {
-                        ErrorCode = ErrorResultDto.ErrorCodeEnum.ProductNotFoundEnum,
-                        Message = "Product was not found with the given barcode"
-                    },
-                    
+                return new ApiErrorResult(
+                    ErrorResultDto.ErrorCodeEnum.ProductNotFoundEnum,
+                    "Product was not found with the given barcode",
                     HttpStatusCode.NotFound
                 );
             }
@@ -93,19 +81,14 @@ namespace TomiSoft.ProductCatalog.Server.Controllers {
             else {
                 switch (result.Explanation) {
                     case CreateProductExplanation.ProductWithBarcodeAlreadyExists:
-                        return new ApiResult(
-                            new ErrorResultDto() {
-                                ErrorCode = ErrorResultDto.ErrorCodeEnum.ProductAlreadyExistsEnum,
-                                Message = "A product with the specified barcode already exists."
-                            }
+                        return new ApiErrorResult(
+                            ErrorResultDto.ErrorCodeEnum.ProductAlreadyExistsEnum,
+                            "A product with the specified barcode already exists.",
+                            HttpStatusCode.Conflict
                         );
+
                     default:
-                        return new ApiResult(
-                            new ErrorResultDto() {
-                                ErrorCode = ErrorResultDto.ErrorCodeEnum.GenericErrorEnum,
-                                Message = "Unknown error occurred."
-                            }
-                        );
+                        return new ApiGenericErrorResult();
                 }
             }
         }
