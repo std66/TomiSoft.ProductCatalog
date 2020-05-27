@@ -32,5 +32,7 @@ namespace TomiSoft.ProductCatalog.BusinessModels.Concepts {
 
         public static implicit operator BarcodeBM(string value) => new BarcodeBM(value);
         public static implicit operator string(BarcodeBM barcodeBM) => barcodeBM.Value;
+
+        public override string ToString() => Value;
     }
 }

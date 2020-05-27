@@ -30,15 +30,15 @@ namespace TomiSoft.ProductCatalog.Server.OpenApiGenerated.Models
         /// The unique identifier of the manufacturer
         /// </summary>
         /// <value>The unique identifier of the manufacturer</value>
-        [DataMember(Name="ManufacturerId", EmitDefaultValue=false)]
-        public int ManufacturerId { get; set; }
+        [DataMember(Name="ManufacturerId", EmitDefaultValue=true)]
+        public int? ManufacturerId { get; set; }
 
         /// <summary>
-        /// The unique ID of the category
+        /// The unique ID of the category.
         /// </summary>
-        /// <value>The unique ID of the category</value>
-        [DataMember(Name="CategoryId", EmitDefaultValue=false)]
-        public int CategoryId { get; set; }
+        /// <value>The unique ID of the category.</value>
+        [DataMember(Name="CategoryId", EmitDefaultValue=true)]
+        public int? CategoryId { get; set; }
 
         /// <summary>
         /// A key-value pair object representing the product name for a specific language.
@@ -97,12 +97,12 @@ namespace TomiSoft.ProductCatalog.Server.OpenApiGenerated.Models
             return 
                 (
                     ManufacturerId == other.ManufacturerId ||
-                    
+                    ManufacturerId != null &&
                     ManufacturerId.Equals(other.ManufacturerId)
                 ) && 
                 (
                     CategoryId == other.CategoryId ||
-                    
+                    CategoryId != null &&
                     CategoryId.Equals(other.CategoryId)
                 ) && 
                 (
@@ -123,9 +123,9 @@ namespace TomiSoft.ProductCatalog.Server.OpenApiGenerated.Models
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
-                    
+                    if (ManufacturerId != null)
                     hashCode = hashCode * 59 + ManufacturerId.GetHashCode();
-                    
+                    if (CategoryId != null)
                     hashCode = hashCode * 59 + CategoryId.GetHashCode();
                     if (ProductName != null)
                     hashCode = hashCode * 59 + ProductName.GetHashCode();

@@ -190,6 +190,12 @@ components:
       format: int32
       example: 341
       description: "The unique identifier of the manufacturer"
+    OptionalManufacturerId:
+      type: integer
+      format: int32
+      nullable: true
+      example: 341
+      description: "The unique identifier of the manufacturer"
     ImageId:
       type: integer
       format: int32
@@ -200,6 +206,12 @@ components:
       format: int32
       example: 15
       description: "The unique ID of the category"
+    OptionalCategoryId:
+      type: integer
+      format: int32
+      nullable: true
+      example: 15
+      description: "The unique ID of the category."
     ErrorResultDto:
       type: object
       properties:
@@ -252,9 +264,9 @@ components:
       description: "Provides information about a product that needs to be saved"
       properties:
         ManufacturerId:
-          $ref: '#/components/schemas/ManufacturerId'
+          $ref: '#/components/schemas/OptionalManufacturerId'
         CategoryId:
-          $ref: '#/components/schemas/CategoryId'
+          $ref: '#/components/schemas/OptionalCategoryId'
         ProductName:
           description: "A key-value pair object representing the product name for a specific language."
           type: object
@@ -270,9 +282,9 @@ components:
       description: "Provides modified information about a product that needs to be updated. If the category or the manufacturer should not be changed, their original value must be provided. To remove the product name for a specific language, provide the language code with null-value. To add a new or modify an existing product name translation, provide the language code with a non-null, non-empty string value."
       properties:
         ManufacturerId:
-          $ref: '#/components/schemas/ManufacturerId'
+          $ref: '#/components/schemas/OptionalManufacturerId'
         CategoryId:
-          $ref: '#/components/schemas/CategoryId'
+          $ref: '#/components/schemas/OptionalCategoryId'
         ProductName:
           description: "A key-value pair object representing the product name for a specific language."
           type: object

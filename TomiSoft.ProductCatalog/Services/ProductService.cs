@@ -53,16 +53,20 @@ namespace TomiSoft.ProductCatalog.Services {
             //apply product name changes
             string[] productNamesToRemove = updateRequest.ProductName.Where(x => string.IsNullOrWhiteSpace(x.Value)).Select(x => x.Key).ToArray();
 
+            //update or keep already specified languages, by ignoring those ones that need to be removed
             Dictionary<string, string> newProductNames = new Dictionary<string, string>();
-            foreach (KeyValuePair<string, string> productNameEntry in product.ProductName) {
-                if (!productNamesToRemove.Contains(productNameEntry.Key)) {
-                    if (updateRequest.ProductName.ContainsKey(productNameEntry.Key)) {
-                        newProductNames.Add(productNameEntry.Key, updateRequest.ProductName[productNameEntry.Key]);
-                    }
-                    else {
-                        newProductNames.Add(productNameEntry.Key, product.ProductName[productNameEntry.Key]);
-                    }
+            foreach (KeyValuePair<string, string> productNameEntry in product.ProductName.Where(x => !productNamesToRemove.Contains(x.Key))) {
+                if (updateRequest.ProductName.ContainsKey(productNameEntry.Key)) {
+                    newProductNames.Add(productNameEntry.Key, updateRequest.ProductName[productNameEntry.Key]);
                 }
+                else {
+                    newProductNames.Add(productNameEntry.Key, product.ProductName[productNameEntry.Key]);
+                }
+            }
+
+            //add new languages
+            foreach (var item in updateRequest.ProductName.Where(x => !productNamesToRemove.Contains(x.Key) && !newProductNames.Keys.Contains(x.Key))) {
+                newProductNames.Add(item.Key, item.Value);
             }
 
             //perform update
