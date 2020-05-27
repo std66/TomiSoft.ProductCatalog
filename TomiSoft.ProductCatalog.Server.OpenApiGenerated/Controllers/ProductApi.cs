@@ -60,17 +60,31 @@ namespace TomiSoft.ProductCatalog.Server.OpenApiGenerated.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Updates the information of an already existing product</remarks>
+        /// <param name="barcode">The barcode of the requested product (eg. EAN-13).</param>
+        /// <param name="patchProductRequestDto"></param>
+        /// <response code="204">The product is successfully updated.</response>
+        /// <response code="404">No products were found with the given barcode</response>
+        /// <response code="500">Server error occurred</response>
+        [HttpPatch]
+        [Route("/Product/{barcode}")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 404, type: typeof(ErrorResultDto))]
+        [ProducesResponseType(statusCode: 500, type: typeof(ErrorResultDto))]
+        public abstract Task<IActionResult> PatchProduct([FromRoute][Required]string barcode, [FromBody]PatchProductRequestDto patchProductRequestDto);
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <remarks>Saves a new product with the given barcode</remarks>
         /// <param name="barcode">The barcode of the requested product (eg. EAN-13).</param>
         /// <param name="postProductRequestDto"></param>
         /// <response code="204">The new product has been saved successfully.</response>
-        /// <response code="400">The request could not be fulfilled because it contains incorrect data.</response>
         /// <response code="409">A product with the given barcode already exists.</response>
         /// <response code="500">Server error occurred</response>
         [HttpPost]
         [Route("/Product/{barcode}")]
         [ValidateModelState]
-        [ProducesResponseType(statusCode: 400, type: typeof(ErrorResultDto))]
         [ProducesResponseType(statusCode: 409, type: typeof(ErrorResultDto))]
         [ProducesResponseType(statusCode: 500, type: typeof(ErrorResultDto))]
         public abstract Task<IActionResult> PostNewProduct([FromRoute][Required]string barcode, [FromBody]PostProductRequestDto postProductRequestDto);

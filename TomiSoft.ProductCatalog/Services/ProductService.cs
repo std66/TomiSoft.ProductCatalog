@@ -1,5 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using TomiSoft.ProductCatalog.BusinessModels;
+using TomiSoft.ProductCatalog.BusinessModels.Concepts;
 using TomiSoft.ProductCatalog.BusinessModels.Explanations;
 using TomiSoft.ProductCatalog.BusinessModels.OperationResult;
 using TomiSoft.ProductCatalog.BusinessModels.Request;
@@ -27,11 +30,11 @@ namespace TomiSoft.ProductCatalog.Services {
             return new EmptyResultBM<CreateProductExplanation>();
         }
 
-        public Task<EmptyResultBM<DeleteProductExplanation>> DeleteProductAsync(string barcode) {
+        public Task<EmptyResultBM<DeleteProductExplanation>> DeleteProductAsync(BarcodeBM barcode) {
             return productDataManager.DeleteProductAsync(barcode);
         }
 
-        public Task<LocalizedProductBM> GetProductAsync(string barcode, string languageCode) {
+        public Task<LocalizedProductBM> GetProductAsync(BarcodeBM barcode, string languageCode) {
             return productDataManager.GetLocalizedProductAsync(barcode, languageCode);
         }
 
@@ -40,6 +43,40 @@ namespace TomiSoft.ProductCatalog.Services {
                 products: await productDataManager.GetLocalizedProductByCategoryAsync(categoryId, languageCode),
                 category: await categoryDataManager.GetAsync(categoryId, languageCode)
             );
+        }
+
+        public async Task<EmptyResultBM<UpdateProductExplanation>> UpdateProductAsync(UpdateProductRequestBM updateRequest) {
+            ProductBM product = await productDataManager.GetProductAsync(updateRequest.Barcode);
+            if (product == null)
+                return new EmptyResultBM<UpdateProductExplanation>(UpdateProductExplanation.ProductNotFound);
+
+            //apply product name changes
+            string[] productNamesToRemove = updateRequest.ProductName.Where(x => string.IsNullOrWhiteSpace(x.Value)).Select(x => x.Key).ToArray();
+
+            Dictionary<string, string> newProductNames = new Dictionary<string, string>();
+            foreach (KeyValuePair<string, string> productNameEntry in product.ProductName) {
+                if (!productNamesToRemove.Contains(productNameEntry.Key)) {
+                    if (updateRequest.ProductName.ContainsKey(productNameEntry.Key)) {
+                        newProductNames.Add(productNameEntry.Key, updateRequest.ProductName[productNameEntry.Key]);
+                    }
+                    else {
+                        newProductNames.Add(productNameEntry.Key, product.ProductName[productNameEntry.Key]);
+                    }
+                }
+            }
+
+            //perform update
+            ProductBM updatedProduct = new ProductBM(
+                barcode: updateRequest.Barcode,
+                manufacturerId: updateRequest.NewManufacturerId,
+                categoryId: updateRequest.NewCategoryId,
+                productName: newProductNames
+            );
+
+            if (!await productDataManager.UpdateProductAsync(updatedProduct))
+                return new EmptyResultBM<UpdateProductExplanation>(UpdateProductExplanation.DatabaseError);
+
+            return new EmptyResultBM<UpdateProductExplanation>();
         }
     }
 }

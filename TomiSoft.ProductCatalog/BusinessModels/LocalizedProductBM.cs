@@ -1,6 +1,8 @@
-﻿namespace TomiSoft.ProductCatalog.BusinessModels {
+﻿using TomiSoft.ProductCatalog.BusinessModels.Concepts;
+
+namespace TomiSoft.ProductCatalog.BusinessModels {
     public class LocalizedProductBM {
-        public LocalizedProductBM(string barcode, string languageCode, string localizedName, LocalizedCategoryBM category, BriefManufacturerBM manufacturer) {
+        public LocalizedProductBM(BarcodeBM barcode, string languageCode, string localizedName, LocalizedCategoryBM category, BriefManufacturerBM manufacturer) {
             Barcode = barcode;
             LanguageCode = languageCode;
             LocalizedName = localizedName;
@@ -8,7 +10,7 @@
             Manufacturer = manufacturer;
         }
 
-        public string Barcode { get; }
+        public BarcodeBM Barcode { get; }
         public string LanguageCode { get; }
         public string LocalizedName { get; }
         public LocalizedCategoryBM Category { get; }

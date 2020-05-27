@@ -67,6 +67,37 @@ namespace TomiSoft.ProductCatalog.Server.Controllers {
             );
         }
 
+        public override async Task<IActionResult> PatchProduct(
+            [FromRoute, Required] string barcode, 
+            [FromBody] PatchProductRequestDto patchProductRequestDto
+        ) {
+            EmptyResultBM<UpdateProductExplanation> result = await productService.UpdateProductAsync(
+                new UpdateProductRequestBM(
+                    barcode: barcode,
+                    newManufacturerId: patchProductRequestDto.ManufacturerId,
+                    newCategoryId: patchProductRequestDto.CategoryId,
+                    productName: patchProductRequestDto.ProductName
+                )
+            );
+
+            if (result.Successful) {
+                return NoContent();
+            }
+            else {
+                switch (result.Explanation) {
+                    case UpdateProductExplanation.ProductNotFound:
+                        return new ApiErrorResult(
+                            ErrorResultDto.ErrorCodeEnum.ProductNotFoundEnum,
+                            "Product was not found with the given barcode",
+                            HttpStatusCode.NotFound
+                        );
+
+                    default:
+                        return new ApiGenericErrorResult();
+                }
+            }
+        }
+
         public override async Task<IActionResult> PostNewProduct(
             [FromRoute, Required] string barcode,
             [FromBody] PostProductRequestDto postProductRequestDto
