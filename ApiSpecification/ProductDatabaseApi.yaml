@@ -32,6 +32,18 @@ paths:
                 $ref: '#/components/schemas/SystemSupportedLanguagesDto'
         500:
           $ref: '#/components/responses/ServerErrorResponse'
+          
+  /Healthz:
+    get:
+      tags:
+        - System
+      description: "Returns a 'No content' response when the service works properly. Can be used for health checking."
+      operationId: Healthz
+      responses:
+        204:
+          description: "The request succeeded, meaning that the service is healthy and it is ready to accept requests."
+        500:
+          $ref: '#/components/responses/ServerErrorResponse'
 
   /Category:
     get:

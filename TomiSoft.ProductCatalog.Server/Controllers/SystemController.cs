@@ -25,5 +25,9 @@ namespace TomiSoft.ProductCatalog.Server.Controllers {
                 )
             );
         }
+
+        public override Task<IActionResult> Healthz() {
+            return Task.FromResult<IActionResult>(NoContent());
+        }
     }
 }

@@ -37,5 +37,17 @@ namespace TomiSoft.ProductCatalog.Server.OpenApiGenerated.Controllers
         [ProducesResponseType(statusCode: 200, type: typeof(SystemSupportedLanguagesDto))]
         [ProducesResponseType(statusCode: 500, type: typeof(ErrorResultDto))]
         public abstract Task<IActionResult> GetSupportedLanguages();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>Returns a &#39;No content&#39; response when the service works properly. Can be used for health checking.</remarks>
+        /// <response code="204">The request succeeded, meaning that the service is healthy and it is ready to accept requests.</response>
+        /// <response code="500">Server error occurred</response>
+        [HttpGet]
+        [Route("/Healthz")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 500, type: typeof(ErrorResultDto))]
+        public abstract Task<IActionResult> Healthz();
     }
 }
