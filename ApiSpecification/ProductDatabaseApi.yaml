@@ -14,6 +14,8 @@ tags:
     description: "This tag refers to system-related operations"
   - name: Manufacturer
     description: "This tag refers to manufacturer-related operations"
+  - name: Category
+    description: "This tag refers to category-related operations"
 paths:
   /SupportedLanguages:
     get:
@@ -28,6 +30,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SystemSupportedLanguagesDto'
+        500:
+          $ref: '#/components/responses/ServerErrorResponse'
+
+  /Category:
+    get:
+      tags:
+        - Category
+      description: "Gets information about every category"
+      operationId: GetAllCategories
+      parameters: 
+        - $ref: '#/components/parameters/AcceptLanguage'
+      responses:
+        200:
+          description: "The server successfully fulfilled the request and returned all the available categories' information"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CategoryInfoWithProductCountDto'
+        204:
+          description: "The request succeeded but there are no categories specified."
         500:
           $ref: '#/components/responses/ServerErrorResponse'
 
@@ -245,7 +269,7 @@ components:
       type: integer
       format: int32
       nullable: true
-      example: 15
+      example: 11
       description: "The unique ID of the category."
     ErrorResultDto:
       type: object
@@ -387,6 +411,23 @@ components:
           type: string
           description: "The category's name"
           example: "Computer peripherals"
+    CategoryInfoWithProductCountDto:
+      type: object
+      description: "Provides information about a category"
+      properties:
+        CategoryId:
+          $ref: '#/components/schemas/CategoryId'
+        ParentCategoryId:
+          $ref: '#/components/schemas/OptionalCategoryId'
+        Name:
+          type: string
+          description: "The localized name of the category"
+          example: "Computer peripherals"
+        ProductCount:
+          type: integer
+          format: int32
+          description: "The number of products associated to this category."
+          example: 348
     ProductImageDto:
       type: object
       properties:

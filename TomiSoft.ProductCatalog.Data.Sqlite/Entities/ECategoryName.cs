@@ -7,6 +7,7 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite.Entities {
     [Table("category_names")]
     internal class ECategoryName : IEquatable<ECategoryName> {
         [Column("category_id"), Required]
+        [ForeignKey(nameof(Category))]
         public int CategoryId { get; set; }
 
         [Column("language_code"), Required]
@@ -14,6 +15,8 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite.Entities {
 
         [Column("localized_name"), Required]
         public string LocalizedName { get; set; }
+
+        public ECategory Category { get; set; }
 
         public override bool Equals(object obj) {
             return Equals(obj as ECategoryName);

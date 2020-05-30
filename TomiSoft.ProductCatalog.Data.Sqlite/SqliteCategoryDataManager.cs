@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
+using System.Resources;
 using System.Threading.Tasks;
 using TomiSoft.ProductCatalog.BusinessModels;
 using TomiSoft.ProductCatalog.Data.Sqlite.Entities;
@@ -28,6 +30,20 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite {
             }
 
             return result;
+        }
+
+        public async Task<IReadOnlyList<LocalizedCategoryWithProductCountBM>> GetAllCategoriesWithProductCountAsync(string languageCode) {
+            return await context.Categories
+                .Select(x => new LocalizedCategoryWithProductCountBM(
+                    new LocalizedCategoryBM(
+                        x.Id,
+                        languageCode,
+                        x.CategoryNames.FirstOrDefault(y => y.LanguageCode == languageCode).LocalizedName,
+                        x.ParentId
+                    ),
+                    x.Products.Count
+                ))
+                .ToListAsync();
         }
 
         public async Task<LocalizedCategoryBM> GetAsync(int id, string languageCode) {

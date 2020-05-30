@@ -133,6 +133,31 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Get all categories",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept-Language",
+						"value": "{{acceptLanguage}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{scheme}}://{{serverUrl}}/category/",
+					"protocol": "{{scheme}}",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"category",
+						""
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"protocolProfileBehavior": {}

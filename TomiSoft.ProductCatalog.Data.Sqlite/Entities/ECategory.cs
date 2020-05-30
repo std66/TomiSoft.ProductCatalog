@@ -12,8 +12,9 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite.Entities {
         [Column("parent_id")]
         public int? ParentId { get; set; }
 
-        [ForeignKey(nameof(ECategoryName.CategoryId))]
         public List<ECategoryName> CategoryNames { get; set; }
+
+        public List<EProduct> Products { get; set; }
 
         public override bool Equals(object obj) {
             return Equals(obj as ECategory);

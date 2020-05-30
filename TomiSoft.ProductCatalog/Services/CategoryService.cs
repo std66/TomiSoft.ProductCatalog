@@ -30,6 +30,10 @@ namespace TomiSoft.ProductCatalog.Services {
             return categoryDataManager.GetAsync(categoryId, languageCode);
         }
 
+        public Task<IReadOnlyList<LocalizedCategoryWithProductCountBM>> GetAllCategoriesAsync(string languageCode) {
+            return categoryDataManager.GetAllCategoriesWithProductCountAsync(languageCode);
+        }
+
         private IEnumerable<CategoryTreeNodeBM> BuildNode(IEnumerable<LocalizedCategoryBM> categories, int? parentCategoryId, IReadOnlyDictionary<int, int> productCountInCategories) {
             List<CategoryTreeNodeBM> childNodes = new List<CategoryTreeNodeBM>();
 

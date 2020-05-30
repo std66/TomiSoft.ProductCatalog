@@ -24,7 +24,8 @@ namespace TomiSoft.ProductCatalog.Server.Middleware {
 
         private static async Task HandleException(HttpContext context, Exception e) {
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-
+            context.Response.ContentType = "application/json";
+            
             await context.Response.WriteAsync(
                 JsonConvert.SerializeObject(
                     new ErrorResultDto() {
