@@ -178,6 +178,32 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite {
             return query.SingleOrDefaultAsync();
         }
 
+        public async Task<ResultBM<IReadOnlyList<BarcodeBM>, GetProductBarcodesByCategoryExplanation>> GetProductBarcodesByCategoryAsync(int categoryId) {
+            try {
+                if (!await dbContext.Categories.AnyAsync(x => x.Id == categoryId)) {
+                    return new FailureResultBM<IReadOnlyList<BarcodeBM>, GetProductBarcodesByCategoryExplanation>(GetProductBarcodesByCategoryExplanation.CategoryNotExists);
+                }
+            }
+            catch (Exception) {
+                return new FailureResultBM<IReadOnlyList<BarcodeBM>, GetProductBarcodesByCategoryExplanation>(GetProductBarcodesByCategoryExplanation.DatabaseError);
+            }
+
+            List<BarcodeBM> result;
+
+            try {
+                result =
+                    await dbContext.Products
+                        .Where(x => x.CategoryId == categoryId)
+                        .Select(x => new BarcodeBM(x.Barcode))
+                        .ToListAsync();
+            }
+            catch (Exception) {
+                return new FailureResultBM<IReadOnlyList<BarcodeBM>, GetProductBarcodesByCategoryExplanation>(GetProductBarcodesByCategoryExplanation.DatabaseError);
+            }
+
+            return new SuccessfulResultBM<IReadOnlyList<BarcodeBM>, GetProductBarcodesByCategoryExplanation>(result);
+        }
+
         public Task<bool> ProductExistsWithBarcodeAsync(BarcodeBM barcode) {
             return dbContext.Products.AnyAsync(x => x.Barcode == barcode.Value);
         }

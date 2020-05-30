@@ -69,6 +69,28 @@ paths:
         500:
           $ref: '#/components/responses/ServerErrorResponse'
 
+  /Category/{categoryId}/Products/Barcodes:
+    get:
+      tags:
+        - Product
+      description: "Gets the barcodes of every product in a given category"
+      operationId: GetAllProductBarcodesInCategory
+      parameters: 
+        - $ref: '#/components/parameters/CategoryId'
+      responses:
+        200:
+          description: "The request succeeded and an array of barcodes are returned which identified the products in the given category."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductBarcodesInCategoryResponseDto'
+        204:
+          description: "The request succeeded but there are no products associated to the given category, meaning the category is empty."
+        404:
+          $ref: '#/components/responses/CategoryNotFoundResponse'
+        500:
+          $ref: '#/components/responses/ServerErrorResponse'
+
   /Product/{barcode}:
     get:
       tags: 
@@ -152,6 +174,13 @@ paths:
     
 components:
   parameters:
+    CategoryId:
+      in: path
+      name: categoryId
+      required: true
+      description: "The ID of the requested category."
+      schema:
+        $ref: '#/components/schemas/CategoryId'
     Barcode:
       in: path
       name: barcode
@@ -168,6 +197,12 @@ components:
         type: string
         example: fr-CH, fr;q=0.9, en;q=0.8, de;q=0.7, *;q=0.5
   responses:
+    CategoryNotFoundResponse:
+      description: "The requested category was not found with the given ID."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResultDto"
     ProductNotFoundResponse:
       description: "No products were found with the given barcode"
       content:
@@ -224,6 +259,7 @@ components:
             - UnauthorizedAccess
             - ProductNotFound
             - ProductAlreadyExists
+            - CategoryNotFound
           example: "ProductNotFound"
         Message:
           type: string
@@ -295,6 +331,11 @@ components:
             en-US: "Sample product"
       required:
         - ProductName
+    ProductBarcodesInCategoryResponseDto:
+      type: array
+      description: "An array containing the barcodes of products in a given category."
+      items:
+        $ref: '#/components/schemas/Barcode'
     SystemSupportedLanguagesDto:
       type: object
       description: "Provides information about the languages supported by the system"

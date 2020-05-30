@@ -45,6 +45,11 @@ namespace TomiSoft.ProductCatalog.Services {
             );
         }
 
+        public Task<ResultBM<IReadOnlyList<BarcodeBM>, GetProductBarcodesByCategoryExplanation>> GetProductBarcodesByCategoryAsync(int categoryId) {
+            return productDataManager.GetProductBarcodesByCategoryAsync(categoryId);
+        }
+
+
         public async Task<EmptyResultBM<UpdateProductExplanation>> UpdateProductAsync(UpdateProductRequestBM updateRequest) {
             ProductBM product = await productDataManager.GetProductAsync(updateRequest.Barcode);
             if (product == null)

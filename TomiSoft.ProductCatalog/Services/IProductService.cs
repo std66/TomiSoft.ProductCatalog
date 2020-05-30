@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using TomiSoft.ProductCatalog.BusinessModels;
 using TomiSoft.ProductCatalog.BusinessModels.Concepts;
 using TomiSoft.ProductCatalog.BusinessModels.Explanations;
@@ -12,5 +13,6 @@ namespace TomiSoft.ProductCatalog.Services {
         Task<EmptyResultBM<CreateProductExplanation>> CreateProductAsync(CreateProductRequestBM createProductRequest);
         Task<EmptyResultBM<DeleteProductExplanation>> DeleteProductAsync(BarcodeBM barcode);
         Task<EmptyResultBM<UpdateProductExplanation>> UpdateProductAsync(UpdateProductRequestBM updateRequest);
+        Task<ResultBM<IReadOnlyList<BarcodeBM>, GetProductBarcodesByCategoryExplanation>> GetProductBarcodesByCategoryAsync(int categoryId);
     }
 }

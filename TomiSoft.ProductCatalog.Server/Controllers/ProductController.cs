@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using TomiSoft.ProductCatalog.BusinessModels;
@@ -45,6 +46,34 @@ namespace TomiSoft.ProductCatalog.Server.Controllers {
             }
 
             return NoContent();
+        }
+
+        public override async Task<IActionResult> GetAllProductBarcodesInCategory(
+            [FromRoute, Required] int categoryId
+        ) {
+            var result = await productService.GetProductBarcodesByCategoryAsync(categoryId);
+
+            if (!result.Successful) {
+                switch (result.Explanation) {
+                    case GetProductBarcodesByCategoryExplanation.DatabaseError:
+                        return new ApiGenericErrorResult();
+
+                    case GetProductBarcodesByCategoryExplanation.CategoryNotExists:
+                        return new ApiErrorResult(
+                            ErrorResultDto.ErrorCodeEnum.CategoryNotFoundEnum,
+                            "Category with the given ID does not exist",
+                            HttpStatusCode.NotFound
+                        );
+                }
+            }
+
+            if (result.Object.Count == 0)
+                return NoContent();
+
+            return new ApiResult(
+                result.Object.Select(x => x.Value),
+                HttpStatusCode.OK
+            );
         }
 
         public override async Task<IActionResult> GetByBarcode(

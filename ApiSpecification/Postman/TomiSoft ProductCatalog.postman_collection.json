@@ -112,6 +112,27 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Get product barcodes in category",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{scheme}}://{{serverUrl}}/category/5/Products/Barcodes",
+					"protocol": "{{scheme}}",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"category",
+						"5",
+						"Products",
+						"Barcodes"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"protocolProfileBehavior": {}

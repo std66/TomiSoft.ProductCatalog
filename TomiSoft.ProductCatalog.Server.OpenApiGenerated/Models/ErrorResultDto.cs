@@ -64,7 +64,13 @@ namespace TomiSoft.ProductCatalog.Server.OpenApiGenerated.Models
             /// Enum ProductAlreadyExistsEnum for ProductAlreadyExists
             /// </summary>
             [EnumMember(Value = "ProductAlreadyExists")]
-            ProductAlreadyExistsEnum = 5
+            ProductAlreadyExistsEnum = 5,
+            
+            /// <summary>
+            /// Enum CategoryNotFoundEnum for CategoryNotFound
+            /// </summary>
+            [EnumMember(Value = "CategoryNotFound")]
+            CategoryNotFoundEnum = 6
         }
 
         /// <summary>
