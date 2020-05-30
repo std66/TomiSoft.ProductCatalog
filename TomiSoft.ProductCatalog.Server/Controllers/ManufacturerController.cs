@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using TomiSoft.ProductCatalog.BusinessModels;
+using TomiSoft.ProductCatalog.BusinessModels.Explanations;
 using TomiSoft.ProductCatalog.Server.OpenApiGenerated.Controllers;
 using TomiSoft.ProductCatalog.Server.OpenApiGenerated.Models;
 using TomiSoft.ProductCatalog.Server.Result;
@@ -26,6 +28,23 @@ namespace TomiSoft.ProductCatalog.Server.Controllers {
             return new ApiResult(
                 manufacturers.Select(x => mapper.Map<BriefManufacturerBM, ManufacturerInfoDto>(x))
             );
+        }
+
+        public override async Task<IActionResult> GetCompanyLogo([FromRoute, Required] int manufacturerId) {
+            var result = await manufacturerService.GetLogoAsync(manufacturerId);
+
+            if (!result.Successful) {
+                switch (result.Explanation) {
+                    case GetManufacturerLogoExplanation.DatabaseError:
+                        return new ApiGenericErrorResult();
+                    case GetManufacturerLogoExplanation.ManufacturerLogoNotExists:
+                        return new ApiErrorResult(ErrorResultDto.ErrorCodeEnum.ManufacturerLogoNotFoundEnum, "There is no logo found for this manufacturer.", HttpStatusCode.NotFound);
+                    case GetManufacturerLogoExplanation.ManufacturerNotExists:
+                        return new ApiErrorResult(ErrorResultDto.ErrorCodeEnum.ManufacturerNotFoundEnum, "The requested manufacturer does not exist.", HttpStatusCode.NotFound);
+                }
+            }
+
+            return File(result.Object.Data, result.Object.MimeType);
         }
 
         public override async Task<IActionResult> PostNewManufacturer([FromBody] PostManufacturerRequestDto postManufacturerRequestDto) {

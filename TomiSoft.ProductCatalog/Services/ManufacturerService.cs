@@ -66,7 +66,7 @@ namespace TomiSoft.ProductCatalog.Services {
             );
         }
 
-        public Task<ManufacturerLogoBM> GetLogoAsync(int manufacturerId) {
+        public Task<ResultBM<ManufacturerLogoBM, GetManufacturerLogoExplanation>> GetLogoAsync(int manufacturerId) {
             return dataManager.GetLogoAsync(manufacturerId);
         }
 

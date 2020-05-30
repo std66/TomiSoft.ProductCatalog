@@ -158,6 +158,26 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Get company logo image",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{scheme}}://{{serverUrl}}/Manufacturer/7/CompanyLogo",
+					"protocol": "{{scheme}}",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"Manufacturer",
+						"7",
+						"CompanyLogo"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"protocolProfileBehavior": {}

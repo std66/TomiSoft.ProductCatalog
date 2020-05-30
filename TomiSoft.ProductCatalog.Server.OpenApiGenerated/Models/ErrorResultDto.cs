@@ -70,7 +70,19 @@ namespace TomiSoft.ProductCatalog.Server.OpenApiGenerated.Models
             /// Enum CategoryNotFoundEnum for CategoryNotFound
             /// </summary>
             [EnumMember(Value = "CategoryNotFound")]
-            CategoryNotFoundEnum = 6
+            CategoryNotFoundEnum = 6,
+            
+            /// <summary>
+            /// Enum ManufacturerNotFoundEnum for ManufacturerNotFound
+            /// </summary>
+            [EnumMember(Value = "ManufacturerNotFound")]
+            ManufacturerNotFoundEnum = 7,
+            
+            /// <summary>
+            /// Enum ManufacturerLogoNotFoundEnum for ManufacturerLogoNotFound
+            /// </summary>
+            [EnumMember(Value = "ManufacturerLogoNotFound")]
+            ManufacturerLogoNotFoundEnum = 8
         }
 
         /// <summary>

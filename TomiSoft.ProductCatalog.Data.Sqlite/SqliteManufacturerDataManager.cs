@@ -52,14 +52,30 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite {
             );
         }
 
-        public async Task<ManufacturerLogoBM> GetLogoAsync(int id) {
-            var data = await dbContext.Manufacturers.Select(x => new {
-                Id = x.Id,
-                Data = x.LogoData,
-                MimeType = x.LogoMimeType
-            }).SingleAsync(x => x.Id == id);
+        public async Task<ResultBM<ManufacturerLogoBM, GetManufacturerLogoExplanation>> GetLogoAsync(int id) {
+            ManufacturerLogoBM result;
 
-            return new ManufacturerLogoBM(data.Data, data.MimeType);
+            try {
+                var data = await dbContext.Manufacturers.Select(x => new {
+                    Id = x.Id,
+                    Data = x.LogoData,
+                    MimeType = x.LogoMimeType
+                }).SingleAsync(x => x.Id == id);
+
+                if (data.Data == null) {
+                    return new FailureResultBM<ManufacturerLogoBM, GetManufacturerLogoExplanation>(GetManufacturerLogoExplanation.ManufacturerLogoNotExists);
+                }
+
+                result = new ManufacturerLogoBM(data.Data, data.MimeType);
+            }
+            catch (InvalidOperationException) {
+                return new FailureResultBM<ManufacturerLogoBM, GetManufacturerLogoExplanation>(GetManufacturerLogoExplanation.ManufacturerNotExists);
+            }
+            catch (Exception) {
+                return new FailureResultBM<ManufacturerLogoBM, GetManufacturerLogoExplanation>(GetManufacturerLogoExplanation.DatabaseError);
+            }
+
+            return new SuccessfulResultBM<ManufacturerLogoBM, GetManufacturerLogoExplanation>(result);
         }
 
         public async Task<ResultBM<ManufacturerBM, AddManufacturerExplanation>> InsertAsync(ManufacturerBM manufacturer) {

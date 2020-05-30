@@ -11,9 +11,9 @@ namespace TomiSoft.ProductCatalog.Services {
         Task DeleteAsync(int manufacturerId);
         Task<IReadOnlyList<ManufacturerBM>> GetAllManufacturersAsync();
         Task<IReadOnlyList<BriefManufacturerBM>> GetAllManufacturersBriefAsync();
-        Task<ManufacturerLogoBM> GetLogoAsync(int manufacturerId);
         Task<ManufacturerBM> GetManufacturerAsync(int manufacturerId);
         Task UpdateLogoAsync(int manufacturerId, ManufacturerLogoBM logo);
         Task UpdateWebsiteAsync(int manufacturerId, Uri websiteUri);
+        Task<ResultBM<ManufacturerLogoBM, GetManufacturerLogoExplanation>> GetLogoAsync(int manufacturerId);
     }
 }

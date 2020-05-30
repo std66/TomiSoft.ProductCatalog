@@ -41,6 +41,22 @@ namespace TomiSoft.ProductCatalog.Server.OpenApiGenerated.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <remarks>Gets the company&#39;s logo image</remarks>
+        /// <param name="manufacturerId">The ID of the requested manufacturer.</param>
+        /// <response code="200">The request succeeded and the service returned an image file that represents the manufacturer&#39;s logo.</response>
+        /// <response code="404">The following cases can cause this response. See the error code in the response body. 1. The requested manufacturer does not exist. The error code is \&quot;ManufacturerNotFound\&quot; 2. The requested manufacturer exists, but there is no company logo found. The error code is \&quot;ManufacturerLogoNotFound\&quot; </response>
+        /// <response code="500">Server error occurred</response>
+        [HttpGet]
+        [Route("/Manufacturer/{manufacturerId}/CompanyLogo")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 200, type: typeof(System.IO.Stream))]
+        [ProducesResponseType(statusCode: 404, type: typeof(ErrorResultDto))]
+        [ProducesResponseType(statusCode: 500, type: typeof(ErrorResultDto))]
+        public abstract Task<IActionResult> GetCompanyLogo([FromRoute][Required]int manufacturerId);
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <remarks>Saves a new manufacturer</remarks>
         /// <param name="postManufacturerRequestDto"></param>
         /// <response code="201">The manufacturer has been successfully created.</response>

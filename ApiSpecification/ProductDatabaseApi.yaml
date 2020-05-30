@@ -104,6 +104,35 @@ paths:
                 $ref: '#/components/schemas/PostManufacturerResponseDto'
         500:
           $ref: '#/components/responses/ServerErrorResponse'
+          
+  /Manufacturer/{manufacturerId}/CompanyLogo:
+    get:
+      tags:
+        - Manufacturer
+      description: "Gets the company's logo image"
+      operationId: GetCompanyLogo
+      parameters:
+        - $ref: '#/components/parameters/ManufacturerId'
+      responses:
+        200:
+          description: "The request succeeded and the service returned an image file that represents the manufacturer's logo."
+          content:
+            image/*:
+              schema:
+                type: string
+                format: binary
+                example: "[binary data]"
+        404:
+          description: |
+            The following cases can cause this response. See the error code in the response body.
+            1. The requested manufacturer does not exist. The error code is "ManufacturerNotFound"
+            2. The requested manufacturer exists, but there is no company logo found. The error code is "ManufacturerLogoNotFound"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResultDto'
+        500:
+          $ref: '#/components/responses/ServerErrorResponse'
 
   /Category/{categoryId}/Products/Barcodes:
     get:
@@ -210,6 +239,13 @@ paths:
     
 components:
   parameters:
+    ManufacturerId:
+      in: path
+      name: manufacturerId
+      required: true
+      description: "The ID of the requested manufacturer."
+      schema:
+        $ref: '#/components/schemas/ManufacturerId'
     CategoryId:
       in: path
       name: categoryId
@@ -296,6 +332,8 @@ components:
             - ProductNotFound
             - ProductAlreadyExists
             - CategoryNotFound
+            - ManufacturerNotFound
+            - ManufacturerLogoNotFound
           example: "ProductNotFound"
         Message:
           type: string
