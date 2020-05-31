@@ -10,21 +10,21 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite.Mapping {
         }
 
         private void AddEntityToBusinessModelMapper() {
-            CreateMap<EManufacturer, ManufacturerBM>()
+            CreateMap<Manufacturer, ManufacturerBM>()
                 .ForCtorParam("manufacturerId", opt => opt.MapFrom(src => src.Id))
                 .ForCtorParam("name", opt => opt.MapFrom(src => src.Name))
                 .ForCtorParam("location", opt => opt.MapFrom((src, context) =>
                     new ManufacturerLocationBM(
-                        src.CountryCode,
-                        src.Address
+                        src.LocationCountrycode,
+                        src.LocationAddress
                     )
                 ))
-                .ForCtorParam("websiteUri", opt => opt.MapFrom(src => src.WebsiteUri))
+                .ForCtorParam("websiteUri", opt => opt.MapFrom(src => src.WebsiteUrl))
                 .ForCtorParam("logo", opt => opt.MapFrom((src, context) => {
-                    if (src.LogoData != null && src.LogoMimeType != null)
+                    if (src.CompanyLogo != null && src.CompanyLogoMimetype != null)
                         return new ManufacturerLogoBM(
-                            src.LogoData,
-                            src.LogoMimeType
+                            src.CompanyLogo,
+                            src.CompanyLogoMimetype
                         );
                     else
                         return null;
@@ -32,14 +32,14 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite.Mapping {
         }
 
         private void AddBusinessModelToEntityMapper() {
-            CreateMap<ManufacturerBM, EManufacturer>()
+            CreateMap<ManufacturerBM, Manufacturer>()
                 .ForMember(x => x.Id, opt => opt.MapFrom(src => src.ManufacturerId))
                 .ForMember(x => x.Name, opt => opt.MapFrom(src => src.Name))
-                .ForMember(x => x.CountryCode, opt => opt.MapFrom(src => src.Location.CountryCode))
-                .ForMember(x => x.Address, opt => opt.MapFrom(src => src.Location.Address))
-                .ForMember(x => x.WebsiteUri, opt => opt.MapFrom(src => src.WebsiteUri))
-                .ForMember(x => x.LogoData, opt => opt.MapFrom(src => src.Logo.Data))
-                .ForMember(x => x.LogoMimeType, opt => opt.MapFrom(src => src.Logo.MimeType));
+                .ForMember(x => x.LocationCountrycode, opt => opt.MapFrom(src => src.Location.CountryCode))
+                .ForMember(x => x.LocationAddress, opt => opt.MapFrom(src => src.Location.Address))
+                .ForMember(x => x.WebsiteUrl, opt => opt.MapFrom(src => src.WebsiteUri))
+                .ForMember(x => x.CompanyLogo, opt => opt.MapFrom(src => src.Logo.Data))
+                .ForMember(x => x.CompanyLogoMimetype, opt => opt.MapFrom(src => src.Logo.MimeType));
         }
     }
 }

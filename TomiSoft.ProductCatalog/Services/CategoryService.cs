@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using TomiSoft.ProductCatalog.BusinessModels;
+using TomiSoft.ProductCatalog.BusinessModels.Concepts;
 using TomiSoft.ProductCatalog.DataManagement;
 
 namespace TomiSoft.ProductCatalog.Services {
@@ -17,7 +18,7 @@ namespace TomiSoft.ProductCatalog.Services {
         public async Task<CategoryTreeRootBM> GetCategoryTreeAsync(string languageCode) {
             IEnumerable<LocalizedCategoryBM> categories = await categoryDataManager.GetAllAsync(languageCode);
 
-            IReadOnlyDictionary<int, int> productCount = await productDataManager.GetNumberOfProductsInCategoriesAsync(
+            IReadOnlyDictionary<CategoryIdBM, int> productCount = await productDataManager.GetNumberOfProductsInCategoriesAsync(
                 categories.Select(x => x.CategoryId).ToArray()
             );
 
@@ -34,7 +35,7 @@ namespace TomiSoft.ProductCatalog.Services {
             return categoryDataManager.GetAllCategoriesWithProductCountAsync(languageCode);
         }
 
-        private IEnumerable<CategoryTreeNodeBM> BuildNode(IEnumerable<LocalizedCategoryBM> categories, int? parentCategoryId, IReadOnlyDictionary<int, int> productCountInCategories) {
+        private IEnumerable<CategoryTreeNodeBM> BuildNode(IEnumerable<LocalizedCategoryBM> categories, CategoryIdBM parentCategoryId, IReadOnlyDictionary<CategoryIdBM, int> productCountInCategories) {
             List<CategoryTreeNodeBM> childNodes = new List<CategoryTreeNodeBM>();
 
             foreach (LocalizedCategoryBM category in categories.Where(x => x.ParentCategoryId == parentCategoryId)) {

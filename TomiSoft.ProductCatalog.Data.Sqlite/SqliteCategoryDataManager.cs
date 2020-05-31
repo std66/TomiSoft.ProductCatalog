@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Resources;
 using System.Threading.Tasks;
 using TomiSoft.ProductCatalog.BusinessModels;
+using TomiSoft.ProductCatalog.BusinessModels.Concepts;
 using TomiSoft.ProductCatalog.Data.Sqlite.Entities;
 using TomiSoft.ProductCatalog.DataManagement;
 
@@ -18,8 +18,8 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite {
         public async Task<IEnumerable<LocalizedCategoryBM>> GetAllAsync(string languageCode) {
             List<LocalizedCategoryBM> result = new List<LocalizedCategoryBM>();
 
-            foreach (var category in await context.Categories.ToListAsync()) {
-                ECategoryName localizedName = await context.CategoryNames.SingleAsync(x => x.CategoryId == category.Id && x.LanguageCode == languageCode);
+            foreach (var category in await context.Category.ToListAsync()) {
+                CategoryName localizedName = await context.CategoryName.SingleAsync(x => x.CategoryId == category.Id && x.LanguageCode == languageCode);
 
                 result.Add(new LocalizedCategoryBM(
                     categoryId: category.Id,
@@ -33,22 +33,22 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite {
         }
 
         public async Task<IReadOnlyList<LocalizedCategoryWithProductCountBM>> GetAllCategoriesWithProductCountAsync(string languageCode) {
-            return await context.Categories
+            return await context.Category
                 .Select(x => new LocalizedCategoryWithProductCountBM(
                     new LocalizedCategoryBM(
                         x.Id,
                         languageCode,
-                        x.CategoryNames.FirstOrDefault(y => y.LanguageCode == languageCode).LocalizedName,
+                        x.CategoryName.FirstOrDefault(y => y.LanguageCode == languageCode).LocalizedName,
                         x.ParentId
                     ),
-                    x.Products.Count
+                    x.Product.Count
                 ))
                 .ToListAsync();
         }
 
-        public async Task<LocalizedCategoryBM> GetAsync(int id, string languageCode) {
-            ECategory category = await context.Categories.SingleAsync(x => x.Id == id);
-            ECategoryName name = await context.CategoryNames.SingleAsync(x => x.CategoryId == id && x.LanguageCode == languageCode);
+        public async Task<LocalizedCategoryBM> GetAsync(CategoryIdBM id, string languageCode) {
+            Category category = await context.Category.SingleAsync(x => x.Id == id.Value);
+            CategoryName name = await context.CategoryName.SingleAsync(x => x.CategoryId == id.Value && x.LanguageCode == languageCode);
 
             return new LocalizedCategoryBM(
                 categoryId: category.Id,

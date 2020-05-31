@@ -38,14 +38,14 @@ namespace TomiSoft.ProductCatalog.Services {
             return productDataManager.GetLocalizedProductAsync(barcode, languageCode);
         }
 
-        public async Task<GetProductsByCategoryResultBM> GetProductsByCategoryAsync(int categoryId, string languageCode) {
+        public async Task<GetProductsByCategoryResultBM> GetProductsByCategoryAsync(CategoryIdBM categoryId, string languageCode) {
             return new GetProductsByCategoryResultBM(
                 products: await productDataManager.GetLocalizedProductByCategoryAsync(categoryId, languageCode),
                 category: await categoryDataManager.GetAsync(categoryId, languageCode)
             );
         }
 
-        public Task<ResultBM<IReadOnlyList<BarcodeBM>, GetProductBarcodesByCategoryExplanation>> GetProductBarcodesByCategoryAsync(int categoryId) {
+        public Task<ResultBM<IReadOnlyList<BarcodeBM>, GetProductBarcodesByCategoryExplanation>> GetProductBarcodesByCategoryAsync(CategoryIdBM categoryId) {
             return productDataManager.GetProductBarcodesByCategoryAsync(categoryId);
         }
 

@@ -294,28 +294,28 @@ components:
       example: "4047443305244"
     ManufacturerId:
       type: integer
-      format: int32
+      format: int64
       example: 341
       description: "The unique identifier of the manufacturer"
     OptionalManufacturerId:
       type: integer
-      format: int32
+      format: int64
       nullable: true
       example: 341
       description: "The unique identifier of the manufacturer"
     ImageId:
       type: integer
-      format: int32
+      format: int64
       example: 152341
       description: "The unique ID of the image"
     CategoryId:
       type: integer
-      format: int32
+      format: int64
       example: 15
       description: "The unique ID of the category"
     OptionalCategoryId:
       type: integer
-      format: int32
+      format: int64
       nullable: true
       example: 11
       description: "The unique ID of the category."

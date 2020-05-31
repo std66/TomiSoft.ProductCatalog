@@ -9,11 +9,11 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite.Mapping {
             CreateMap<PBriefManufacturer, BriefManufacturerBM>()
                 .ForCtorParam("name", opt => opt.MapFrom(input => input.Name))
                 .ForCtorParam("manufacturerId", opt => opt.MapFrom(input => input.Id))
-                .ForCtorParam("websiteUri", opt => opt.MapFrom(input => new Uri(input.WebsiteUri)))
+                .ForCtorParam("websiteUri", opt => opt.MapFrom(input => new Uri(input.WebsiteUrl)))
                 .ForCtorParam("location", opt => opt.MapFrom(
                     input => new ManufacturerLocationBM(
-                        input.CountryCode,
-                        input.Address
+                        input.LocationCountryCode,
+                        input.LocationAddress
                     )
                 ));
         }

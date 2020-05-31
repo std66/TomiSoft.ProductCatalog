@@ -5,7 +5,8 @@ using TomiSoft.ProductCatalog.Data.Sqlite.Entities.Projections;
 namespace TomiSoft.ProductCatalog.Data.Sqlite.Mapping {
     class ProjectionProfile : Profile {
         public ProjectionProfile() {
-            CreateMap<EManufacturer, PBriefManufacturer>();
+            CreateMap<Manufacturer, PBriefManufacturer>();
+            CreateMap<Manufacturer, PManufacturerCompanyLogo>();
         }
     }
 }

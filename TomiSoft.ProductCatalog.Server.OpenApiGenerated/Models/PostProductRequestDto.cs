@@ -31,14 +31,14 @@ namespace TomiSoft.ProductCatalog.Server.OpenApiGenerated.Models
         /// </summary>
         /// <value>The unique identifier of the manufacturer</value>
         [DataMember(Name="ManufacturerId", EmitDefaultValue=true)]
-        public int? ManufacturerId { get; set; }
+        public long? ManufacturerId { get; set; }
 
         /// <summary>
         /// The unique ID of the category.
         /// </summary>
         /// <value>The unique ID of the category.</value>
         [DataMember(Name="CategoryId", EmitDefaultValue=true)]
-        public int? CategoryId { get; set; }
+        public long? CategoryId { get; set; }
 
         /// <summary>
         /// A key-value pair object representing the product name for a specific language.
