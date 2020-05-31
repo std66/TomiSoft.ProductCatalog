@@ -49,7 +49,7 @@ namespace TomiSoft.ProductCatalog.Server.Controllers {
         }
 
         public override async Task<IActionResult> GetAllProductBarcodesInCategory(
-            [FromRoute, Required] int categoryId
+            [FromRoute, Required] long categoryId
         ) {
             var result = await productService.GetProductBarcodesByCategoryAsync(categoryId);
 

@@ -30,7 +30,7 @@ namespace TomiSoft.ProductCatalog.Server.Controllers {
             );
         }
 
-        public override async Task<IActionResult> GetCompanyLogo([FromRoute, Required] int manufacturerId) {
+        public override async Task<IActionResult> GetCompanyLogo([FromRoute, Required] long manufacturerId) {
             var result = await manufacturerService.GetLogoAsync(manufacturerId);
 
             if (!result.Successful) {

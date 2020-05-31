@@ -31,7 +31,7 @@ namespace TomiSoft.ProductCatalog.Server.OpenApiGenerated.Models
         /// </summary>
         /// <value>The unique identifier of the manufacturer</value>
         [DataMember(Name="ManufacturerId", EmitDefaultValue=false)]
-        public int ManufacturerId { get; set; }
+        public long ManufacturerId { get; set; }
 
         /// <summary>
         /// The manufacturer&#39;s name

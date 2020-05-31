@@ -10,6 +10,7 @@ using TomiSoft.ProductCatalog.BusinessModels.Explanations;
 using TomiSoft.ProductCatalog.BusinessModels.OperationResult;
 using TomiSoft.ProductCatalog.BusinessModels.Request;
 using TomiSoft.ProductCatalog.Data.Sqlite.Entities;
+using TomiSoft.ProductCatalog.Data.Sqlite.Extensions;
 using TomiSoft.ProductCatalog.DataManagement;
 
 namespace TomiSoft.ProductCatalog.Data.Sqlite {
@@ -23,14 +24,14 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite {
         public async Task<bool> CreateProductAsync(CreateProductRequestBM createProductRequest) {
             using (IDbContextTransaction transaction = await dbContext.Database.BeginTransactionAsync()) {
                 try {
-                    await dbContext.Products.AddAsync(new EProduct() {
+                    await dbContext.Product.AddAsync(new Product() {
                         Barcode = createProductRequest.Barcode,
                         CategoryId = createProductRequest.CategoryId,
                         ManufacturerId = createProductRequest.ManufacturerId
                     });
 
-                    await dbContext.ProductNames.AddRangeAsync(
-                        createProductRequest.Name.Select(x => new EProductName() {
+                    await dbContext.ProductName.AddRangeAsync(
+                        createProductRequest.Name.Select(x => new ProductName() {
                             Barcode = createProductRequest.Barcode,
                             LanguageCode = x.Key,
                             LocalizedName = x.Value
@@ -52,13 +53,13 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite {
 
         public async Task<EmptyResultBM<DeleteProductExplanation>> DeleteProductAsync(BarcodeBM barcode) {
             try {
-                EProduct productToDelete = await dbContext.Products.SingleAsync(x => x.Barcode == barcode.Value);
+                Product productToDelete = await dbContext.Product.SingleAsync(x => x.Barcode == barcode.Value);
 
-                dbContext.ProductNames.RemoveRange(
-                    dbContext.ProductNames.Where(x => x.Barcode == barcode.Value)
+                dbContext.ProductName.RemoveRange(
+                    dbContext.ProductName.Where(x => x.Barcode == barcode.Value)
                 );
 
-                dbContext.Products.Remove(productToDelete);
+                dbContext.Product.Remove(productToDelete);
 
                 await dbContext.SaveChangesAsync();
             }
@@ -73,16 +74,16 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite {
         }
 
         public async Task<LocalizedProductBM> GetLocalizedProductAsync(BarcodeBM barcode, string languageCode) {
-            var query = from product in dbContext.Products
-                        join productName in dbContext.ProductNames on product.Barcode equals productName.Barcode
+            var query = from product in dbContext.Product
+                        join productName in dbContext.ProductName on product.Barcode equals productName.Barcode
 
-                        join selected_category in dbContext.Categories on product.CategoryId equals selected_category.Id into product_category_join
+                        join selected_category in dbContext.Category on product.CategoryId equals selected_category.Id into product_category_join
 
                         from category in product_category_join.DefaultIfEmpty()
-                        join selected_categoryName in dbContext.CategoryNames on category.Id equals selected_categoryName.CategoryId into category_categoryname_join
+                        join selected_categoryName in dbContext.CategoryName on category.Id equals selected_categoryName.CategoryId into category_categoryname_join
 
                         from categoryName in category_categoryname_join.DefaultIfEmpty()
-                        join selected_manufacturer in dbContext.Manufacturers on product.ManufacturerId equals selected_manufacturer.Id into product_manufacturer_join
+                        join selected_manufacturer in dbContext.Manufacturer on product.ManufacturerId equals selected_manufacturer.Id into product_manufacturer_join
 
                         from manufacturer in product_manufacturer_join.DefaultIfEmpty()
 
@@ -110,10 +111,10 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite {
                                 (int?)manufacturer.Id ?? 0,
                                 manufacturer.Name,
                                 new ManufacturerLocationBM(
-                                    manufacturer.CountryCode,
-                                    manufacturer.Address
+                                    manufacturer.LocationCountrycode,
+                                    manufacturer.LocationAddress
                                 ),
-                                new Uri(manufacturer.WebsiteUri)
+                                new Uri(manufacturer.WebsiteUrl)
                             )
                         );
 
@@ -125,13 +126,13 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite {
             }
         }
 
-        public async Task<IReadOnlyList<LocalizedProductByCategoryBM>> GetLocalizedProductByCategoryAsync(int categoryId, string languageCode) {
-            var query = from product in dbContext.Products
+        public async Task<IReadOnlyList<LocalizedProductByCategoryBM>> GetLocalizedProductByCategoryAsync(CategoryIdBM categoryId, string languageCode) {
+            var query = from product in dbContext.Product
 
-                        join productName in dbContext.ProductNames on product.Barcode equals productName.Barcode
-                        join manufacturer in dbContext.Manufacturers on product.ManufacturerId equals manufacturer.Id
+                        join productName in dbContext.ProductName on product.Barcode equals productName.Barcode
+                        join manufacturer in dbContext.Manufacturer on product.ManufacturerId equals manufacturer.Id
 
-                        where product.CategoryId == categoryId && productName.LanguageCode == languageCode
+                        where product.CategoryId == categoryId.Value && productName.LanguageCode == languageCode
 
                         select new LocalizedProductByCategoryBM(
                             product.Barcode,
@@ -140,47 +141,49 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite {
                             new BriefManufacturerBM(
                                 manufacturer.Id,
                                 manufacturer.Name,
-                                new ManufacturerLocationBM(manufacturer.CountryCode, manufacturer.Address),
-                                new Uri(manufacturer.WebsiteUri)
+                                new ManufacturerLocationBM(manufacturer.LocationCountrycode, manufacturer.LocationAddress),
+                                new Uri(manufacturer.WebsiteUrl)
                             )
                         );
 
             return await query.ToListAsync();
         }
 
-        public async Task<IReadOnlyDictionary<int, int>> GetNumberOfProductsInCategoriesAsync(params int[] categoryIds) {
-            var query = from product in dbContext.Products
-                        where product.CategoryId.HasValue ? categoryIds.Contains(product.CategoryId.Value) : false
+        public async Task<IReadOnlyDictionary<CategoryIdBM, int>> GetNumberOfProductsInCategoriesAsync(params CategoryIdBM[] categoryIds) {
+            long[] categoryIdsAsLong = categoryIds.Select(x => x.Value).ToArray();
+
+            var query = from product in dbContext.Product
+                        where product.CategoryId.HasValue ? categoryIdsAsLong.Contains(product.CategoryId.Value) : false
                         group product by product.CategoryId into groups
                         select new {
                             Id = groups.Key.Value,
                             Count = groups.Count()
                         };
 
-            var result = await query.ToDictionaryAsync(key => key.Id, value => value.Count);
+            var result = await query.ToDictionaryAsync(key => new CategoryIdBM(key.Id), value => value.Count);
 
-            foreach (var id in categoryIds.Except(result.Keys))
+            foreach (CategoryIdBM id in categoryIds.Except(result.Keys))
                 result.Add(id, 0);
 
             return result;
         }
 
         public Task<ProductBM> GetProductAsync(BarcodeBM barcode) {
-            var query = from product in dbContext.Products.Include(x => x.ProductNames)
+            var query = from product in dbContext.Product.Include(x => x.ProductName)
                         where product.Barcode == barcode.Value
                         select new ProductBM(
                             product.Barcode,
                             product.ManufacturerId,
                             product.CategoryId,
-                            product.ProductNames.Select(x => new { Key = x.LanguageCode, Value = x.LocalizedName }).ToDictionary(x => x.Key, x => x.Value)
+                            product.ProductName.Select(x => new { Key = x.LanguageCode, Value = x.LocalizedName }).ToDictionary(x => x.Key, x => x.Value)
                         );
 
             return query.SingleOrDefaultAsync();
         }
 
-        public async Task<ResultBM<IReadOnlyList<BarcodeBM>, GetProductBarcodesByCategoryExplanation>> GetProductBarcodesByCategoryAsync(int categoryId) {
+        public async Task<ResultBM<IReadOnlyList<BarcodeBM>, GetProductBarcodesByCategoryExplanation>> GetProductBarcodesByCategoryAsync(CategoryIdBM categoryId) {
             try {
-                if (!await dbContext.Categories.AnyAsync(x => x.Id == categoryId)) {
+                if (!await dbContext.Category.AnyAsync(x => x.Id == categoryId.Value)) {
                     return new FailureResultBM<IReadOnlyList<BarcodeBM>, GetProductBarcodesByCategoryExplanation>(GetProductBarcodesByCategoryExplanation.CategoryNotExists);
                 }
             }
@@ -192,7 +195,7 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite {
 
             try {
                 result =
-                    await dbContext.Products
+                    await dbContext.Product
                         .Where(x => x.CategoryId == categoryId)
                         .Select(x => new BarcodeBM(x.Barcode))
                         .ToListAsync();
@@ -205,14 +208,14 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite {
         }
 
         public Task<bool> ProductExistsWithBarcodeAsync(BarcodeBM barcode) {
-            return dbContext.Products.AnyAsync(x => x.Barcode == barcode.Value);
+            return dbContext.Product.AnyAsync(x => x.Barcode == barcode.Value);
         }
 
         public async Task<bool> UpdateProductAsync(ProductBM product) {
-            EProduct productModel;
+            Product productModel;
 
             try {
-                productModel = await dbContext.Products.Include(x => x.ProductNames).SingleAsync(x => x.Barcode == product.Barcode.Value);
+                productModel = await dbContext.Product.Include(x => x.ProductName).SingleAsync(x => x.Barcode == product.Barcode.Value);
             }
             catch (Exception) {
                 return false;
@@ -221,13 +224,13 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite {
             productModel.CategoryId = product.CategoryId;
             productModel.ManufacturerId = product.ManufacturerId;
 
-            productModel.ProductNames.RemoveAll(x => !product.ProductName.Keys.Contains(x.LanguageCode));
+            productModel.ProductName.RemoveAll(x => !product.ProductName.Keys.Contains(x.LanguageCode));
 
             foreach (var item in product.ProductName) {
-                EProductName productNameModel = productModel.ProductNames.FirstOrDefault(x => x.LanguageCode == item.Key);
+                ProductName productNameModel = productModel.ProductName.FirstOrDefault(x => x.LanguageCode == item.Key);
                 if (productNameModel == null) {
-                    productModel.ProductNames.Add(
-                        new EProductName() {
+                    productModel.ProductName.Add(
+                        new ProductName() {
                             Barcode = product.Barcode,
                             LanguageCode = item.Key,
                             LocalizedName = item.Value

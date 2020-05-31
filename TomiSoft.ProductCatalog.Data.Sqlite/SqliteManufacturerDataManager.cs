@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TomiSoft.ProductCatalog.BusinessModels;
+using TomiSoft.ProductCatalog.BusinessModels.Concepts;
 using TomiSoft.ProductCatalog.BusinessModels.Explanations;
 using TomiSoft.ProductCatalog.BusinessModels.OperationResult;
 using TomiSoft.ProductCatalog.Data.Sqlite.Entities;
@@ -23,21 +24,21 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite {
         }
 
         public async Task DeleteAsync(ManufacturerBM manufacturer) {
-            dbContext.Manufacturers.Remove(
-                await dbContext.Manufacturers.SingleAsync(x => x.Id == manufacturer.ManufacturerId)
+            dbContext.Manufacturer.Remove(
+                await dbContext.Manufacturer.SingleAsync(x => x.Id == manufacturer.ManufacturerId)
             );
 
             await dbContext.SaveChangesAsync();
         }
 
         public async Task<IReadOnlyList<ManufacturerBM>> GetAllAsync() {
-            return await dbContext.Manufacturers
+            return await dbContext.Manufacturer
                 .ProjectTo<ManufacturerBM>(mapper.ConfigurationProvider)
                 .ToListAsync();
         }
 
         public async Task<IReadOnlyList<BriefManufacturerBM>> GetAllBriefAsync() {
-            List<PBriefManufacturer> list = await dbContext.Manufacturers
+            List<PBriefManufacturer> list = await dbContext.Manufacturer
                 .ProjectTo<PBriefManufacturer>(mapper.ConfigurationProvider)
                 .ToListAsync();
 
@@ -46,27 +47,23 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite {
                 .ToList();
         }
 
-        public async Task<ManufacturerBM> GetAsync(int id) {
-            return mapper.Map<EManufacturer, ManufacturerBM>(
-                await dbContext.Manufacturers.SingleAsync(x => x.Id == id)
+        public async Task<ManufacturerBM> GetAsync(ManufacturerIdBM id) {
+            return mapper.Map<Manufacturer, ManufacturerBM>(
+                await dbContext.Manufacturer.SingleAsync(x => x.Id == id.Value)
             );
         }
 
-        public async Task<ResultBM<ManufacturerLogoBM, GetManufacturerLogoExplanation>> GetLogoAsync(int id) {
+        public async Task<ResultBM<ManufacturerLogoBM, GetManufacturerLogoExplanation>> GetLogoAsync(ManufacturerIdBM id) {
             ManufacturerLogoBM result;
 
             try {
-                var data = await dbContext.Manufacturers.Select(x => new {
-                    Id = x.Id,
-                    Data = x.LogoData,
-                    MimeType = x.LogoMimeType
-                }).SingleAsync(x => x.Id == id);
+                var data = await dbContext.Manufacturer.ProjectTo<PManufacturerCompanyLogo>(mapper.ConfigurationProvider).SingleAsync(x => x.Id == id.Value);
 
-                if (data.Data == null) {
+                if (data.CompanyLogo == null) {
                     return new FailureResultBM<ManufacturerLogoBM, GetManufacturerLogoExplanation>(GetManufacturerLogoExplanation.ManufacturerLogoNotExists);
                 }
 
-                result = new ManufacturerLogoBM(data.Data, data.MimeType);
+                result = new ManufacturerLogoBM(data.CompanyLogo, data.CompanyLogoMimetype);
             }
             catch (InvalidOperationException) {
                 return new FailureResultBM<ManufacturerLogoBM, GetManufacturerLogoExplanation>(GetManufacturerLogoExplanation.ManufacturerNotExists);
@@ -79,14 +76,14 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite {
         }
 
         public async Task<ResultBM<ManufacturerBM, AddManufacturerExplanation>> InsertAsync(ManufacturerBM manufacturer) {
-            EManufacturer entity = mapper.Map<ManufacturerBM, EManufacturer>(manufacturer);
+            Manufacturer entity = mapper.Map<ManufacturerBM, Manufacturer>(manufacturer);
 
             try {
-                await dbContext.Manufacturers.AddAsync(entity);
+                await dbContext.Manufacturer.AddAsync(entity);
                 await dbContext.SaveChangesAsync();
 
                 return new SuccessfulResultBM<ManufacturerBM, AddManufacturerExplanation>(
-                    mapper.Map<EManufacturer, ManufacturerBM>(entity)
+                    mapper.Map<Manufacturer, ManufacturerBM>(entity)
                 );
             }
             catch (DbUpdateException) {
@@ -98,7 +95,7 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite {
         }
 
         public async Task UpdateAsync(ManufacturerBM manufacturer) {
-            EManufacturer entity = await dbContext.Manufacturers.SingleAsync(x => x.Id == manufacturer.ManufacturerId);
+            Manufacturer entity = await dbContext.Manufacturer.SingleAsync(x => x.Id == manufacturer.ManufacturerId);
             mapper.Map(manufacturer, entity);
 
             await dbContext.SaveChangesAsync();

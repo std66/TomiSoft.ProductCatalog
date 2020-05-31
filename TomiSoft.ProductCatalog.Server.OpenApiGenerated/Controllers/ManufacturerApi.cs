@@ -52,7 +52,7 @@ namespace TomiSoft.ProductCatalog.Server.OpenApiGenerated.Controllers
         [ProducesResponseType(statusCode: 200, type: typeof(System.IO.Stream))]
         [ProducesResponseType(statusCode: 404, type: typeof(ErrorResultDto))]
         [ProducesResponseType(statusCode: 500, type: typeof(ErrorResultDto))]
-        public abstract Task<IActionResult> GetCompanyLogo([FromRoute][Required]int manufacturerId);
+        public abstract Task<IActionResult> GetCompanyLogo([FromRoute][Required]long manufacturerId);
 
         /// <summary>
         /// 

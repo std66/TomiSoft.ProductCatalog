@@ -38,7 +38,7 @@ namespace TomiSoft.ProductCatalog.Server.OpenApiGenerated.Models
         /// </summary>
         /// <value>The unique ID of the image</value>
         [DataMember(Name="ImageID", EmitDefaultValue=false)]
-        public int ImageID { get; set; }
+        public long ImageID { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object

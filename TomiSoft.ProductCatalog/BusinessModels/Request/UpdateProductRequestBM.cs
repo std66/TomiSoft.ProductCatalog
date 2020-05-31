@@ -3,7 +3,7 @@ using TomiSoft.ProductCatalog.BusinessModels.Concepts;
 
 namespace TomiSoft.ProductCatalog.BusinessModels.Request {
     public class UpdateProductRequestBM {
-        public UpdateProductRequestBM(BarcodeBM barcode, int? newManufacturerId, int? newCategoryId, IReadOnlyDictionary<string, string> productName) {
+        public UpdateProductRequestBM(BarcodeBM barcode, ManufacturerIdBM newManufacturerId, CategoryIdBM newCategoryId, IReadOnlyDictionary<string, string> productName) {
             Barcode = barcode;
             NewManufacturerId = newManufacturerId;
             NewCategoryId = newCategoryId;
@@ -11,8 +11,8 @@ namespace TomiSoft.ProductCatalog.BusinessModels.Request {
         }
 
         public BarcodeBM Barcode { get; }
-        public int? NewManufacturerId { get; }
-        public int? NewCategoryId { get; }
+        public ManufacturerIdBM NewManufacturerId { get; }
+        public CategoryIdBM NewCategoryId { get; }
         public IReadOnlyDictionary<string, string> ProductName { get; }
     }
 }

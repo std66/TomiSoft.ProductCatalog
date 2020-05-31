@@ -31,7 +31,7 @@ namespace TomiSoft.ProductCatalog.Server.OpenApiGenerated.Models
         /// </summary>
         /// <value>The unique ID of the category</value>
         [DataMember(Name="CategoryId", EmitDefaultValue=false)]
-        public int CategoryId { get; set; }
+        public long CategoryId { get; set; }
 
         /// <summary>
         /// The category&#39;s name

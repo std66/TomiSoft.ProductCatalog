@@ -4,7 +4,7 @@ using TomiSoft.ProductCatalog.BusinessModels.Concepts;
 
 namespace TomiSoft.ProductCatalog.BusinessModels.Request {
     public class CreateProductRequestBM {
-        public CreateProductRequestBM(BarcodeBM barcode, int? manufacturerId, int? categoryId, IReadOnlyDictionary<string, string> name) {
+        public CreateProductRequestBM(BarcodeBM barcode, ManufacturerIdBM manufacturerId, CategoryIdBM categoryId, IReadOnlyDictionary<string, string> name) {
             Barcode = barcode ?? throw new ArgumentNullException(nameof(barcode));
             ManufacturerId = manufacturerId;
             CategoryId = categoryId;
@@ -12,8 +12,8 @@ namespace TomiSoft.ProductCatalog.BusinessModels.Request {
         }
 
         public BarcodeBM Barcode { get; }
-        public int? ManufacturerId { get; }
-        public int? CategoryId { get; }
+        public ManufacturerIdBM ManufacturerId { get; }
+        public CategoryIdBM CategoryId { get; }
         public IReadOnlyDictionary<string, string> Name { get; }
     }
 }

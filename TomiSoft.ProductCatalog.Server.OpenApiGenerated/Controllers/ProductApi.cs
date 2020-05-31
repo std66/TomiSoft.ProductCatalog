@@ -55,7 +55,7 @@ namespace TomiSoft.ProductCatalog.Server.OpenApiGenerated.Controllers
         [ProducesResponseType(statusCode: 200, type: typeof(List<string>))]
         [ProducesResponseType(statusCode: 404, type: typeof(ErrorResultDto))]
         [ProducesResponseType(statusCode: 500, type: typeof(ErrorResultDto))]
-        public abstract Task<IActionResult> GetAllProductBarcodesInCategory([FromRoute][Required]int categoryId);
+        public abstract Task<IActionResult> GetAllProductBarcodesInCategory([FromRoute][Required]long categoryId);
 
         /// <summary>
         /// 
