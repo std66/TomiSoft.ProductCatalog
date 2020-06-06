@@ -100,7 +100,7 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite {
 
                             //category
                             category == null ? null : new LocalizedCategoryBM(
-                                (int?)category.Id ?? 0,
+                                (long?)category.Id ?? 0,
                                 categoryName.LanguageCode,
                                 categoryName.LocalizedName,
                                 category.ParentId
@@ -108,13 +108,13 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite {
 
                             //manufacturer
                             manufacturer == null ? null : new BriefManufacturerBM(
-                                (int?)manufacturer.Id ?? 0,
+                                (long?)manufacturer.Id ?? 0,
                                 manufacturer.Name,
                                 new ManufacturerLocationBM(
                                     manufacturer.LocationCountrycode,
                                     manufacturer.LocationAddress
                                 ),
-                                new Uri(manufacturer.WebsiteUrl)
+                                manufacturer.WebsiteUrl == null ? null : new Uri(manufacturer.WebsiteUrl)
                             )
                         );
 
