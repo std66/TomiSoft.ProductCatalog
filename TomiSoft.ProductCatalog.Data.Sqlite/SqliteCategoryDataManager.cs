@@ -39,7 +39,7 @@ namespace TomiSoft.ProductCatalog.Data.Sqlite {
                         x.Id,
                         languageCode,
                         x.CategoryName.FirstOrDefault(y => y.LanguageCode == languageCode).LocalizedName,
-                        x.ParentId
+                        x.ParentId == null ? null : new CategoryIdBM(x.ParentId.Value)
                     ),
                     x.Product.Count
                 ))
