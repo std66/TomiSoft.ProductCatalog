@@ -82,7 +82,13 @@ namespace TomiSoft.ProductCatalog.Server.OpenApiGenerated.Models
             /// Enum ManufacturerLogoNotFoundEnum for ManufacturerLogoNotFound
             /// </summary>
             [EnumMember(Value = "ManufacturerLogoNotFound")]
-            ManufacturerLogoNotFoundEnum = 8
+            ManufacturerLogoNotFoundEnum = 8,
+            
+            /// <summary>
+            /// Enum MissingRequiredTranslationEnum for MissingRequiredTranslation
+            /// </summary>
+            [EnumMember(Value = "MissingRequiredTranslation")]
+            MissingRequiredTranslationEnum = 9
         }
 
         /// <summary>

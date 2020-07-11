@@ -39,5 +39,21 @@ namespace TomiSoft.ProductCatalog.Server.OpenApiGenerated.Controllers
         [ProducesResponseType(statusCode: 200, type: typeof(List<CategoryInfoWithProductCountDto>))]
         [ProducesResponseType(statusCode: 500, type: typeof(ErrorResultDto))]
         public abstract Task<IActionResult> GetAllCategories([FromHeader]string acceptLanguage);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>Creates a new category</remarks>
+        /// <param name="postCategoryRequestDto"></param>
+        /// <response code="201">The request succeeded.</response>
+        /// <response code="400">The server expects the translations for every supported language to be provided, but one or more translations were not given in the request. The ErrorCode is &#39;MissingRequiredTranslation&#39;.</response>
+        /// <response code="500">Server error occurred</response>
+        [HttpPost]
+        [Route("/Category")]
+        [ValidateModelState]
+        [ProducesResponseType(statusCode: 201, type: typeof(PostCategoryResultDto))]
+        [ProducesResponseType(statusCode: 400, type: typeof(ErrorResultDto))]
+        [ProducesResponseType(statusCode: 500, type: typeof(ErrorResultDto))]
+        public abstract Task<IActionResult> PostCategory([FromBody]PostCategoryRequestDto postCategoryRequestDto);
     }
 }

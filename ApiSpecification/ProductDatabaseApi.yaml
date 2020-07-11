@@ -66,6 +66,30 @@ paths:
           description: "The request succeeded but there are no categories specified."
         500:
           $ref: '#/components/responses/ServerErrorResponse'
+          
+    post:
+     tags:
+      - Category
+     description: "Creates a new category"
+     operationId: PostCategory
+     requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostCategoryRequestDto'
+        
+     responses:
+        201:
+          description: "The request succeeded."
+          content:
+           application/json:
+            schema:
+              $ref: '#/components/schemas/PostCategoryResultDto'
+        400:
+          $ref: '#/components/responses/MissingRequiredTranslation'
+          
+        500:
+          $ref: '#/components/responses/ServerErrorResponse'      
 
   /Manufacturer:
     get:
@@ -287,6 +311,12 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorResultDto"
+    MissingRequiredTranslation:
+      description: "The server expects the translations for every supported language to be provided, but one or more translations were not given in the request. The ErrorCode is 'MissingRequiredTranslation'."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResultDto"
   schemas:
     Barcode:
       type: string
@@ -334,11 +364,30 @@ components:
             - CategoryNotFound
             - ManufacturerNotFound
             - ManufacturerLogoNotFound
+            - MissingRequiredTranslation
           example: "ProductNotFound"
         Message:
           type: string
           description: "A human-friendly error message in English"
           example: "No products were found with the specified barcode"
+    PostCategoryResultDto:
+      type: object
+      description: "Provides information about a newly created category."
+      properties:
+        CategoryId:
+          $ref: '#/components/schemas/CategoryId'
+    PostCategoryRequestDto:
+      type: object
+      description: "Provides information about a new category that needs to be saved"
+      properties:
+        CategoryName:
+          description: "A key-value pair object representing the product name for a specific language."
+          type: object
+          additionalProperties:
+            type: string
+          example: 
+            hu-HU: "Számítógépes perifériák"
+            en-US: "Computer peripherals"
     PostManufacturerRequestDto:
       type: object
       description: "Provides information about a manufacturer that needs to be saved"
